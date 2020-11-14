@@ -48,15 +48,14 @@ public class MainMenu extends JFrame {
 			f.dispose(); // Hide previous frame
 			}
 		});
-		/*
+		
 		b2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				seventh_add seventh = new seventh_add();  
-				seventh.setVisible(true); 
-				f.setVisible(false); // Hide previous frame
+				BasicSearch basicSearch = new BasicSearch();  
+				basicSearch.setVisible(true); 
+				f.dispose(); // Hide previous frame
 				}
 			});
 		}
-		*/
+		
 	}
-}
