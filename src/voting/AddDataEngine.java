@@ -1,4 +1,3 @@
-package voting;
 import java.sql.*;
 
 

@@ -1,10 +1,11 @@
-package voting;
-
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
+import java.sql.ResultSet;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -13,10 +14,13 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import java.util.Arrays;
 
 public class AdvancedSearch extends JFrame {
 	private JPanel contentPane;
@@ -28,10 +32,14 @@ public class AdvancedSearch extends JFrame {
     private JTextField txtValue_1;
     //private final Action action = new SwingAction();
     public static String dRangeInput = "None";
+    public static String fillInInput = "None";
     public static String outChamb = "None";
     public static String outCong = "None";
     public static String outIcp = "None";
     public static String outCast = "None";
+    public static String selectedSsc = "None";
+    
+    QueryDataEngine dataEngine = new QueryDataEngine();
     
     public AdvancedSearch() {
         Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -97,8 +105,13 @@ public class AdvancedSearch extends JFrame {
         ssc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         ssc.setOpaque(true);
 
-        JLabel dRange = new JLabel("Date Range", JLabel.CENTER);
-        dRange.setBounds(175,325,200,50);
+        JLabel fillLabel = new JLabel("Search on value :", JLabel.CENTER);
+        fillLabel.setBounds(175,325,200,50);
+        fillLabel.setFont(new Font("Sans-serif", Font.PLAIN, 18));
+        fillLabel.setOpaque(true);
+        
+        JLabel dRange = new JLabel("Date (YYYY-MM-DD) (ROLLCALL ONLY)", JLabel.CENTER);
+        dRange.setBounds(175,450,350,50);
         dRange.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         dRange.setOpaque(true);
 
@@ -112,13 +125,6 @@ public class AdvancedSearch extends JFrame {
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
 
-        JLabel other = new JLabel("Other appropriate queries (ICPSR, Name, etc.)", JLabel.CENTER);
-        other.setBounds(175,450,690,50);
-        other.setFont(new Font("Sans-serif", Font.PLAIN, 18));
-        other.setOpaque(true);
-        other.setBackground(new Color(255, 255, 255));
-        other.setBorder(blackline);
-
         JLabel endList = new JLabel("<html>List of parties / members / votes / rollcalls. <br/> Click on a given item to display the basic search attributes.</html>", JLabel.CENTER);
         endList.setBounds(175,525,690,150);
         endList.setFont(new Font("Sans-serif", Font.PLAIN, 18));
@@ -127,28 +133,51 @@ public class AdvancedSearch extends JFrame {
         endList.setBorder(blackline);
 
 
-        String[] sscs = { "None", "Ssc1", "Ssc2", "Ssc3", "Ssc4", "Ssc5" };
+        String[] sscs = { "None", "Members - congress", "Members - chamber", "Members - icpsr",
+        		"Members - state_icpsr", "Members - district_code", "Members - state_abbrev", "Members - party_code", 
+        		"Members - occupancy", "Members - last_means", "Members - bioname", "Members - bioguide_id",
+        		"Members - born", "Members - died", "Members - dim1", "Members - dim2",
+        		"Members - log_likelihood", "Members - geo_mean_probability", "Members - number_of_votes", "Members - number_of_errors", "Members - conditional",
+        		"Parties - congress", "Parties - chamber", "Parties - party_code", "Parties - party_name", "Parties - n_members",
+        		"Parties - dim1_median", "Parties - dim2_median", "Parties - dim1_mean", "Parties - dim2_mean",
+        		"Rollcalls - congress", "Rollcalls - chamber", "Rollcalls - rollnumber", "Rollcalls - date",
+        		"Rollcalls - session", "Rollcalls - clerk_rollnumber", "Rollcalls - mid_1", "Rollcalls - mid_2",
+        		"Rollcalls - spread_1", "Rollcalls - spread_2", "Rollcalls - log_likelihood", "Rollcalls - bill_number",
+        		"Rollcalls - vote_result", "Rollcalls - vote_desc", "Rollcalls - vote_question", "Rollcalls - dtl_desc",
+        		"Votes - congress", "Votes - chamber", "Votes - rollnumber", "Votes - icpsr", "Votes - cast_code"
+        		};
         JComboBox sscDropdown = new JComboBox(sscs);
         sscDropdown.setSelectedIndex(0);
         sscDropdown.setBounds(400,275,290,50);
-        String selectedSsc = (String)sscDropdown.getSelectedItem();
         sscDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedSsc = (String)sscDropdown.getSelectedItem();
+        		selectedSsc = (String)sscDropdown.getSelectedItem();
         		System.out.println(selectedSsc);
         	}
         });
 
+        JTextField fillInBlank = new JTextField(20);
+        fillInBlank.setBounds(400,325,465,50);
+        fillInBlank.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fillInInput = fillInBlank.getText();
+        		System.out.println(fillInInput);
+        	}
+        });
+        
+        
         JTextField dRangeBlank = new JTextField(20);
-        dRangeBlank.setBounds(400,325,465,50);
+        dRangeBlank.setBounds(600,450,265,50);
         dRangeBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		dRangeInput = dRangeBlank.getText();
         		System.out.println(dRangeInput);
         	}
         });
-
-        String[] chambers = { "None", "Chamber1", "Chamber2", "Chamber3", "Chamber4", "Chamber5" };
+        
+        
+        
+        String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
         chamberDropdown.setBounds(700,375,165,50);
@@ -161,15 +190,37 @@ public class AdvancedSearch extends JFrame {
         	}
         });
 
-        String[] congs = { "None", "1", "2", "3", "4", "5" };
+        
+        FieldList congsFieldList = new FieldList();
+        congsFieldList.addField("Chamber",  "\"Senate\"");
+        dataEngine.queryParty(congsFieldList);
+        ResultSet rs = dataEngine.getResultSet();
+        int count = 0;
+        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
+        congList[0]="None";
+        try {
+        while (rs.next ())
+        {
+            String congVal = rs.getString ("congress");
+            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
+            if(!contains) {
+            	++count;
+            	congList[count] = congVal;
+            }
+            
+        }
+        rs.close ();
+        }catch(Exception exc) {
+        	exc.printStackTrace();
+        }
+        String[] congs = congList;
         JComboBox congDropdown = new JComboBox(congs);
         congDropdown.setSelectedIndex(0);
         congDropdown.setBounds(400,375,165,50);
-        String selectedCong = (String)congDropdown.getSelectedItem();
         congDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedCong = (String)congDropdown.getSelectedItem();
-        		System.out.println(selectedCong);
+        		outCong = (String)congDropdown.getSelectedItem();
+        		System.out.println(outCong);
         	}
         });
 
@@ -181,8 +232,146 @@ public class AdvancedSearch extends JFrame {
         contentPane.add(enterDataOne);
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if(dRangeInput!="None" && outChamb!="None" && outCong!="None"){
+        		if(selectedSsc != "None" && outChamb!="None" && outCong!="None"){
         			System.out.println("Entered data.");
+        			String[] tokens = selectedSsc.split(" ", -1);
+        			System.out.println(tokens[0]);//gives method
+        			String method = tokens[0];
+        			System.out.println(tokens[2]);//gives field
+        			String field1 = tokens[2].substring(0);
+        			String field2 = "\"" + outChamb + "\"";
+        			String field3 = outCong;
+        			String field4 = "\"" + dRangeInput + "\"";
+        			fillInInput = fillInInput.replace("\"", "");
+        			FieldList fieldList = new FieldList();
+        			if(field1.equalsIgnoreCase("chamber") || field1.equalsIgnoreCase("state_abbrev") || field1.equalsIgnoreCase("bioname") || 
+        					field1.equalsIgnoreCase("bioguide_id") || field1.equalsIgnoreCase("party_name") || field1.equalsIgnoreCase("date") ||
+        					field1.equalsIgnoreCase("bill_number") || field1.equalsIgnoreCase("vote_result") || field1.equalsIgnoreCase("vote_desc") ||
+        					field1.equalsIgnoreCase("vote_question") || field1.equalsIgnoreCase("dtl_desc")) {//if the field is a string field (any table)
+        				System.out.println("HEY");
+        				fillInInput = "\"" + fillInInput + "\"";
+        			}
+        			if(method.equalsIgnoreCase("Members")) {
+        				//send to member query
+        				fieldList.addField(field1, fillInInput);
+            			fieldList.addField("Chamber", field2);
+            			fieldList.addField("Congress", field3);
+        				System.out.println("send to member query");
+        				dataEngine.queryMember(fieldList);
+        				ResultSet rs = dataEngine.getResultSet();
+        				try {
+            		        JTable rst = new ResultSetTable(rs);
+            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            		        contentPane.remove(endList);
+            		        Component[] componentList = contentPane.getComponents();
+            		        for(Component c : componentList){
+            		            if(c instanceof JScrollPane){
+            		                contentPane.remove(c);
+            		            }
+            		        }
+            		        JScrollPane pane = new JScrollPane(rst);
+            		        pane.setBounds(175,525,690,150);
+            		        contentPane.add(pane, BorderLayout.CENTER);
+            		        contentPane.revalidate();
+            		        contentPane.repaint();
+        				}catch(Exception ex) {
+        					ex.printStackTrace();
+        				}
+        				
+        			}else if(method.equalsIgnoreCase("Parties")) {
+        				System.out.println("send to party query");
+        				fieldList.addField(field1, fillInInput);
+            			fieldList.addField("Chamber", field2);
+            			fieldList.addField("Congress", field3);
+        				dataEngine.queryParty(fieldList);
+        				ResultSet rs = dataEngine.getResultSet();
+        				try {
+            		        JTable rst = new ResultSetTable(rs);
+            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            		        contentPane.remove(endList);
+            		        Component[] componentList = contentPane.getComponents();
+            		        for(Component c : componentList){
+            		            if(c instanceof JScrollPane){
+            		                contentPane.remove(c);
+            		            }
+            		        }
+            		        JScrollPane pane = new JScrollPane(rst);
+            		        pane.setBounds(175,525,690,150);
+            		        contentPane.add(pane, BorderLayout.CENTER);
+            		        contentPane.revalidate();
+            		        contentPane.repaint();
+        				}catch(Exception ex) {
+        					ex.printStackTrace();
+        				}
+        			}else if(method.equalsIgnoreCase("Rollcalls")) {
+        				System.out.println("send to rollcall query");
+        				fieldList.addField(field1, fillInInput);
+            			fieldList.addField("Chamber", field2);
+            			fieldList.addField("Congress", field3);
+            			System.out.println(field4);
+            			System.out.println(field4.length());
+            			System.out.println(field4.length()>5);
+            			if(field4.length()>6) {
+            				fieldList.addField("date", field4);
+            			}
+        				dataEngine.queryRollcall(fieldList);
+        				ResultSet rs = dataEngine.getResultSet();
+        				try {
+            		        JTable rst = new ResultSetTable(rs);
+            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            		        contentPane.remove(endList);
+            		        Component[] componentList = contentPane.getComponents();
+            		        for(Component c : componentList){
+            		            if(c instanceof JScrollPane){
+            		                contentPane.remove(c);
+            		            }
+            		        }
+            		        JScrollPane pane = new JScrollPane(rst);
+            		        pane.setBounds(175,525,690,150);
+            		        contentPane.add(pane, BorderLayout.CENTER);
+            		        contentPane.revalidate();
+            		        contentPane.repaint();
+        				}catch(Exception ex) {
+        					ex.printStackTrace();
+        				}
+        			}else if(method.equalsIgnoreCase("Votes")) {
+        				System.out.println("send to vote query");
+        				fieldList.addField(field1, fillInInput);
+            			fieldList.addField("Chamber", field2);
+            			fieldList.addField("Congress", field3);
+        				dataEngine.queryVote(fieldList);
+        				ResultSet rs = dataEngine.getResultSet();
+        				try {
+            		        JTable rst = new ResultSetTable(rs);
+            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            		        contentPane.remove(endList);
+            		        Component[] componentList = contentPane.getComponents();
+            		        for(Component c : componentList){
+            		            if(c instanceof JScrollPane){
+            		                contentPane.remove(c);
+            		            }
+            		        }
+            		        JScrollPane pane = new JScrollPane(rst);
+            		        pane.setBounds(175,525,690,150);
+            		        contentPane.add(pane, BorderLayout.CENTER);
+            		        contentPane.revalidate();
+            		        contentPane.repaint();
+        				}catch(Exception ex) {
+        					ex.printStackTrace();
+        				}
+        			}
+        			
+        			
+        			
+        			
+        			
+        			
+        			
+        			
+        			
+        			
+        			
+        			
         		}else{
         			System.out.println("Fill in all fields.");
         		}
@@ -191,11 +380,12 @@ public class AdvancedSearch extends JFrame {
 
 
         contentPane.add(ssc);
+        contentPane.add(fillLabel);
         contentPane.add(dRange);
         contentPane.add(chamb);
         contentPane.add(cong);
         contentPane.add(dRangeBlank);
-        contentPane.add(other);
+        contentPane.add(fillInBlank);
         contentPane.add(endList);
         contentPane.add(sscDropdown);
         contentPane.add(chamberDropdown);

@@ -1,5 +1,3 @@
-package voting;
-
 import java.util.ArrayList;
 
 public class FieldList {
@@ -13,6 +11,7 @@ public class FieldList {
 	
 	public void addField(String field, String value) {
 		fields.add(field);
+		//value = "\""+value+"\"";
 		values.add(value);
 	}
 	

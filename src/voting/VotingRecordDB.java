@@ -1,5 +1,3 @@
-package voting;
-
 import javax.swing.*;  
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,7 +22,4 @@ public class VotingRecordDB {
 	}
 
 }
-
-
-
 
