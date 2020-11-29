@@ -1,6 +1,5 @@
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+package voting;
+import java.sql.*;
  
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -14,13 +13,10 @@ public class ResultSetTable extends JTable{
  
   private final DefaultTableModel dataModel;
  
-  public ResultSetTable(ResultSet rs)
-                       throws SQLException{
- 
+  public ResultSetTable(ResultSet rs) throws SQLException{
     super();
     dataModel = new DefaultTableModel();
     setModel(dataModel);
- 
     try {
       //create an array of column names
       ResultSetMetaData mdata = rs.getMetaData();
@@ -45,6 +41,7 @@ public class ResultSetTable extends JTable{
         rs.close();
       }
       catch (SQLException ignore) {
+    	  System.out.println("Failed to close ResultSet");
       }
     }
   }

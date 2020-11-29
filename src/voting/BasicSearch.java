@@ -1,3 +1,5 @@
+package voting;
+
 import javax.swing.*;  
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,14 +21,6 @@ import java.awt.Component;
 
 public class BasicSearch extends JFrame {
 	private JPanel contentPane;
-	private JPanel contentPaneTest;
-	private JPanel contentPaneTesting;
-    private JTextField txtTypeYourQuestion;
-    private JTextField txtQuestionWeight;
-    private JTextField txtEnter;
-    private JTextField txtEnter_1;
-    private JTextField txtValue;
-    private JTextField txtValue_1;
     //private final Action action = new SwingAction();
     public static String epmvrInput = "None";
     public static String selectedSsc = "None";
@@ -38,8 +32,6 @@ public class BasicSearch extends JFrame {
     //create query data engine object
     QueryDataEngine dataEngine = new QueryDataEngine();
 
-    
-    
     public BasicSearch() {
         Border blackline = BorderFactory.createLineBorder(Color.black);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,7 +63,7 @@ public class BasicSearch extends JFrame {
         title.setBackground(new Color(255, 255, 255));
         contentPane.add(title);
 
-
+        //Switch to select Basic Search
         JButton bSearch=new JButton("Basic Search");//creating instance of JButton  
         bSearch.setBounds(175,200,290,80);//x axis, y axis, width, height 
         bSearch.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -83,6 +75,7 @@ public class BasicSearch extends JFrame {
         bSearch.setBorderPainted(false);
         contentPane.add(bSearch);
         
+        //Switch to select Advanced Search
         JButton aSearch=new JButton("Advanced Search");//creating instance of JButton  
         aSearch.setBounds(470,200,310,80);//x axis, y axis, width, height 
         aSearch.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -98,43 +91,45 @@ public class BasicSearch extends JFrame {
         	}
         });
 		
+        //Column to Query       
         JLabel ssc = new JLabel("Select Search Criteria", JLabel.CENTER);
         ssc.setBounds(175,258,290,50);
         ssc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         ssc.setOpaque(true);
-
+		
+        //Table to Search
+        /*
         JLabel includeLabel = new JLabel("Include", JLabel.CENTER);
         includeLabel.setBounds(175,350,290,50);
         includeLabel.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         includeLabel.setOpaque(true);
+        */
         
+        //Value
         JLabel epmvr = new JLabel("Enter Party / Member / Vote / Rollcall:", JLabel.CENTER);
         epmvr.setBounds(150,305,340,50);
         epmvr.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         epmvr.setOpaque(true);
 
+        //Display Area
         JLabel endList = new JLabel("<html>List of parties / members / votes / rollcalls. <br/> Click on a given item to display the basic search attributes.</html>", JLabel.CENTER);
         endList.setBounds(175,400,585,275);
         endList.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         endList.setOpaque(true);
         endList.setBackground(new Color(255, 255, 255));
         endList.setBorder(blackline);
-        
-        
-
+                
         String[] sscs = { "None", "Members - congress", "Members - chamber", "Members - icpsr",
         		"Members - state_icpsr", "Members - district_code", "Members - state_abbrev", "Members - party_code", 
         		"Members - occupancy", "Members - last_means", "Members - bioname", "Members - bioguide_id",
-        		"Members - born", "Members - died", "Members - dim1", "Members - dim2",
-        		"Members - log_likelihood", "Members - geo_mean_probability", "Members - number_of_votes", "Members - number_of_errors", "Members - conditional",
+        		"Members - born", "Members - died", "Members - number_of_votes", "Members - number_of_errors",
         		"Parties - congress", "Parties - chamber", "Parties - party_code", "Parties - party_name", "Parties - n_members",
-        		"Parties - dim1_median", "Parties - dim2_median", "Parties - dim1_mean", "Parties - dim2_mean",
         		"Rollcalls - congress", "Rollcalls - chamber", "Rollcalls - rollnumber", "Rollcalls - date",
-        		"Rollcalls - session", "Rollcalls - clerk_rollnumber", "Rollcalls - mid_1", "Rollcalls - mid_2",
-        		"Rollcalls - spread_1", "Rollcalls - spread_2", "Rollcalls - log_likelihood", "Rollcalls - bill_number",
+        		"Rollcalls - session", "Rollcalls - clerk_rollnumber", "Rollcalls - bill_number",
         		"Rollcalls - vote_result", "Rollcalls - vote_desc", "Rollcalls - vote_question", "Rollcalls - dtl_desc",
         		"Votes - congress", "Votes - chamber", "Votes - rollnumber", "Votes - icpsr", "Votes - cast_code"
         		};
+        
         JComboBox sscDropdown = new JComboBox(sscs);
         sscDropdown.setSelectedIndex(0);
         sscDropdown.setBounds(490,260,270,50);
@@ -146,6 +141,7 @@ public class BasicSearch extends JFrame {
         	}
         });
         
+        /*
         String[] includes = {"None", "Members", "Parties", "Rollcalls", "Votes"};
         JComboBox includeDropdown = new JComboBox(includes);
         includeDropdown.setSelectedIndex(0);
@@ -157,9 +153,8 @@ public class BasicSearch extends JFrame {
         		
         	}
         });
+        */
         
-
-
         JTextField epmvrBlank = new JTextField(20);
         epmvrBlank.setBounds(490,305,270,50);
         epmvrBlank.addActionListener(new ActionListener() {
@@ -168,12 +163,15 @@ public class BasicSearch extends JFrame {
         		System.out.println(epmvrInput);
         	}
         });
-
+        
+        //Enter Data
         JButton enterDataOne=new JButton("Search");//creating instance of JButton  
         enterDataOne.setBounds(10,560,150,100);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(enterDataOne);
         JFrame currFrame = (JFrame) SwingUtilities.windowForComponent(contentPane);
+        
+        
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e){
         		if(epmvrInput != "None"){
@@ -190,386 +188,40 @@ public class BasicSearch extends JFrame {
         					field.equalsIgnoreCase("vote_question") || field.equalsIgnoreCase("dtl_desc")) {//if the field is a string field (any table)
         				epmvrInput = "\"" + epmvrInput + "\"";
         			}
+        			//Initialize the fields being searched
         			FieldList fieldList = new FieldList();
         			fieldList.addField(field, epmvrInput);
+
         			if(method.equalsIgnoreCase("Members")) {
-        				//send to member query
-        				if(selectedInclude=="None" || selectedInclude=="Members") {
-	        				System.out.println("send to member query");
-	        				dataEngine.queryMember(fieldList);
-	        				ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-        				}else if(selectedInclude=="Parties") {
-        					//send to memberXparty query
-        					System.out.println("send to memberXparty query" + selectedInclude);
-        					//String[] joinby = {"party_code"};
-        					dataEngine.queryMemberXParty(fieldList, "members", "parties");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-        					
-        				}else if(selectedInclude=="Rollcalls") {
-        					//send to memberXrollcall query
-        					System.out.println("send to memberXrollcall query" + selectedInclude);
-        					//String[] joinby = {"congress", "chamber"};
-        					dataEngine.queryMemberXRollcall(fieldList, "members", "rollcalls");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-        				}else if(selectedInclude=="Votes") {
-        					//send to memberXvote query
-        					System.out.println("send to memberXvote query" + selectedInclude);
-        					//String[] joinby = {"icpsr"};
-        					dataEngine.queryMemberXVote(fieldList, "members", "votes");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-        				}
-        				
-        			}else if(method.equalsIgnoreCase("Parties")) {
-        				if(selectedInclude=="None" || selectedInclude=="Parties") {
-	        				//send to party query
-	        				System.out.println("send to party query");
-	        				dataEngine.queryParty(fieldList);
-	        				ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-        				}else if(selectedInclude=="Members") {
-        					//send to memberXparty query
-        					System.out.println("send to memberXparty query" + selectedInclude);
-        					//String[] joinby = {"party_code"};
-        					dataEngine.queryMemberXParty(fieldList, "parties", "members");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}else if(selectedInclude=="Rollcalls") {
-	        				//partiesXrollcalls
-	        				dataEngine.queryPartyXRollcall(fieldList, "parties", "rollcalls");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}else if(selectedInclude=="Votes") {
-	        				//partiesXvotes
-	        				dataEngine.queryPartyXVote(fieldList, "parties", "votes");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}
-        			}else if(method.equalsIgnoreCase("Rollcalls")) {
-        				if(selectedInclude=="None" || selectedInclude=="Rollcalls") {
-	        				//send to rollcall query
-	        				System.out.println("send to rollcall query");
-	        				dataEngine.queryRollcall(fieldList);
-	        				ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}else if(selectedInclude=="Members") {
-	        				//rcXm
-	        				dataEngine.queryMemberXRollcall(fieldList, "rollcalls", "members");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}else if(selectedInclude=="Parties") {
-	        				//rcXp
-	        				dataEngine.queryPartyXRollcall(fieldList, "rollcalls", "parties");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}else if(selectedInclude=="Votes") {
-	        				//rcXv
-	        				dataEngine.queryRollcallXVote(fieldList, "rollcalls", "votes");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}
-        			}else if(method.equalsIgnoreCase("Votes")) {
-        				if(selectedInclude=="None"||selectedInclude=="Votes") {
-	        				//send to vote query
-	        				System.out.println("send to vote query");
-	        				dataEngine.queryVote(fieldList);
-	        				ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-        				}else if(selectedInclude=="Members") {
-	        				//vXm
-        					dataEngine.queryMemberXVote(fieldList, "votes", "members");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}else if(selectedInclude=="Parties") {
-	        				//vXp
-	        				dataEngine.queryPartyXVote(fieldList, "votes", "parties");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}else if(selectedInclude=="Rollcalls") {
-	        				//vXrc
-	        				dataEngine.queryRollcallXVote(fieldList, "rollcalls", "votes");
-        					ResultSet rs = dataEngine.getResultSet();
-	        				try {
-	            		        JTable rst = new ResultSetTable(rs);
-	            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	            		        contentPane.remove(endList);
-	            		        Component[] componentList = contentPane.getComponents();
-	            		        for(Component c : componentList){
-	            		            if(c instanceof JScrollPane){
-	            		                contentPane.remove(c);
-	            		            }
-	            		        }
-	            		        JScrollPane pane = new JScrollPane(rst);
-	            		        pane.setBounds(175,400,585,275);
-	            		        contentPane.add(pane, BorderLayout.CENTER);
-	            		        contentPane.revalidate();
-	            		        contentPane.repaint();
-	        				}catch(Exception ex) {
-	        					ex.printStackTrace();
-	        				}
-	        			}
+        				dataEngine.queryTable(fieldList, "HSall_members", null);
+        			} else if(method.equalsIgnoreCase("Parties")) {
+        				dataEngine.queryTable(fieldList, "HSall_parties", null);
+        			} else if(method.equalsIgnoreCase("Rollcalls")) {
+        				dataEngine.queryTable(fieldList, "HSall_rollcalls", null);
+        			} else if(method.equalsIgnoreCase("Votes")) {
+        				dataEngine.queryTable(fieldList, "HSall_votes", null);
         			}
-        			System.out.println("Entered data.");
-        		}else{
-        			System.out.println("Select search criteria.");
+        			
+        			ResultSet rs = dataEngine.getResultSet();
+        				
+    				try {
+        		        JTable rst = new ResultSetTable(rs);
+        		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        		        contentPane.remove(endList);
+        		        Component[] componentList = contentPane.getComponents();
+        		        for(Component c : componentList){
+        		            if(c instanceof JScrollPane){
+        		                contentPane.remove(c);
+        		            }
+        		        }
+        		        JScrollPane pane = new JScrollPane(rst);
+        		        pane.setBounds(175,400,585,275);
+        		        contentPane.add(pane, BorderLayout.CENTER);
+        		        contentPane.revalidate();
+        		        contentPane.repaint();
+    				} catch(Exception ex) {
+    					ex.printStackTrace();
+    				}
         		}
         	}
         });
@@ -580,8 +232,8 @@ public class BasicSearch extends JFrame {
         contentPane.add(epmvrBlank);
         contentPane.add(endList);
         contentPane.add(sscDropdown);
-        contentPane.add(includeDropdown);
-        contentPane.add(includeLabel);
+        //contentPane.add(includeDropdown);
+        //contentPane.add(includeLabel);
 
     }
 }

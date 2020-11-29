@@ -1,4 +1,7 @@
+package voting;
+
 import java.sql.*;
+import java.util.ArrayList;
 
 public class QueryDataEngine {
 	private Connection connection;
@@ -8,7 +11,7 @@ public class QueryDataEngine {
 		try
         {
           // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:/Users/benjaminpfeffer/Downloads/voting/voting.db");
+          connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\salba\\Documents\\CIS452 Databases\\VotingRecordProject\\voting.db");
           stmt = connection.createStatement();
           System.out.println("Connection successful");
         }
@@ -16,6 +19,95 @@ public class QueryDataEngine {
         {
         	System.err.println(e.getMessage());
         }
+	}
+	
+	public void queryTable(FieldList fieldList, String table, String join) {	
+		try {
+			String queryText = "select * from " + table + " ";
+			if(join != null) {
+				switch(table) {
+				//Search members based on another table
+				case "HSall_members":
+					switch(join) {
+					case "HSall_parties":
+						queryText += "inner join HSall_parties using(congress, chamber, party_code) ";
+						break;
+					case "HSall_rollcalls":
+						queryText += "inner join HSall_votes using(congress, chamber, icpsr) inner join HSall_rollcalls using(congress, chamber, rollnumber) ";
+						break;
+					case "HSall_votes":
+						queryText += "inner join HSall_votes using(congress, chamber, icpsr) ";
+						break;
+					}
+					break;
+				case "HSall_parties":
+					switch(join) {
+					case "HSall_members":
+						queryText += "inner join HSall_members using(congress, chamber, party_code) ";
+						break;
+					case "HSall_rollcalls":
+						queryText += "inner join HSall_rollcalls using(congress, chamber) ";
+						break;
+					case "HSall_votes":
+						queryText += "inner join HSall_votes using(congress, chamber) ";
+						break;
+					}
+					break;
+				case "HSall_rollcalls":
+					switch(join) {
+					case "HSall_members":
+						queryText += "inner join HSall_votes using(congress, chamber, icpsr) inner join HSall_rollcalls using(congress, chamber, rollnumber) ";
+						break;
+					case "HSall_parties":
+						queryText += "inner join HSall_rollcalls using(congress, chamber) ";
+						break;
+					case "HSall_votes":
+						queryText += "inner join HSall_votes using(congress, chamber, rollnumber) ";
+						break;
+					}
+					break;
+				case "HSall_votes":
+					switch(join) {
+					case "HSall_members":
+						queryText += "inner join HSall_votes using(congress, chamber, icpsr) ";
+						break;
+					case "HSall_parties":
+						queryText += "inner join HSall_votes using(congress, chamber) ";
+						break;
+					case "HSall_rollcalls":
+						queryText += "inner join HSall_votes using(congress, chamber, rollnumber) ";
+						break;
+					}
+					break;
+				}
+			}
+			//Detect if rollnumber needs to be included for the date
+			for(int i = 0; i < fieldList.size(); i++) {
+				if((fieldList.fields.get(i).equals("startDate") || fieldList.fields.get(i).equals("startDate")) && join != "HSall_rollcalls" && table != "HSall_rollcalls") {
+					queryText += "inner join HSall_rollcalls using(congress, chamber) ";
+					break;
+				}
+			}
+			queryText += "where ";
+			String op = "=";
+
+			for(int i = 0; i < fieldList.size(); i++) {
+				if(i > 0) queryText = queryText + " and ";
+				if(fieldList.fields.get(i).equals("startDate"))
+					queryText = queryText + "date" + ">" + fieldList.values.get(i);
+				else if(fieldList.fields.get(i).equals("endDate"))
+					queryText = queryText + "date" + "<" + fieldList.values.get(i);
+				else
+					queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
+				System.out.println(queryText);
+			}
+			rs = stmt.executeQuery(queryText);
+			//rs.close();
+			
+		}
+		catch(SQLException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public void queryVote(FieldList fieldList) {
@@ -89,7 +181,6 @@ public class QueryDataEngine {
 			System.err.println(e.getMessage());
 		}
 	}
-	
 	
 	
 	///////Adding 2 table connections

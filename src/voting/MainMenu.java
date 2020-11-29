@@ -1,12 +1,10 @@
+package voting;
 
 import javax.swing.*;  
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 public class MainMenu extends JFrame {
 	private JPanel contentPane;

@@ -1,3 +1,5 @@
+package voting;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -8,19 +10,13 @@ import java.awt.font.TextAttribute;
 import java.sql.ResultSet;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 public class AdvancedSearch extends JFrame {
 	private JPanel contentPane;
@@ -31,13 +27,15 @@ public class AdvancedSearch extends JFrame {
     private JTextField txtValue;
     private JTextField txtValue_1;
     //private final Action action = new SwingAction();
-    public static String dRangeInput = "None";
+    public static String startDate = "None";
+    public static String endDate = "None";
     public static String fillInInput = "None";
     public static String outChamb = "None";
     public static String outCong = "None";
     public static String outIcp = "None";
     public static String outCast = "None";
     public static String selectedSsc = "None";
+    public static String selectedTbl = "None";
     
     QueryDataEngine dataEngine = new QueryDataEngine();
     
@@ -110,8 +108,8 @@ public class AdvancedSearch extends JFrame {
         fillLabel.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         fillLabel.setOpaque(true);
         
-        JLabel dRange = new JLabel("Date (YYYY-MM-DD) (ROLLCALL ONLY)", JLabel.CENTER);
-        dRange.setBounds(175,450,350,50);
+        JLabel dRange = new JLabel("Date (YYYY-MM-DD)", JLabel.CENTER);
+        dRange.setBounds(175,450,250,50);
         dRange.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         dRange.setOpaque(true);
 
@@ -133,26 +131,34 @@ public class AdvancedSearch extends JFrame {
         endList.setBorder(blackline);
 
 
-        String[] sscs = { "None", "Members - congress", "Members - chamber", "Members - icpsr",
+        String[] sscs = { "None", "Members - icpsr",
         		"Members - state_icpsr", "Members - district_code", "Members - state_abbrev", "Members - party_code", 
         		"Members - occupancy", "Members - last_means", "Members - bioname", "Members - bioguide_id",
-        		"Members - born", "Members - died", "Members - dim1", "Members - dim2",
-        		"Members - log_likelihood", "Members - geo_mean_probability", "Members - number_of_votes", "Members - number_of_errors", "Members - conditional",
-        		"Parties - congress", "Parties - chamber", "Parties - party_code", "Parties - party_name", "Parties - n_members",
+        		"Members - born", "Members - died", "Members - number_of_votes", "Members - number_of_errors",
+        		"Parties - party_code", "Parties - party_name", "Parties - n_members",
         		"Parties - dim1_median", "Parties - dim2_median", "Parties - dim1_mean", "Parties - dim2_mean",
-        		"Rollcalls - congress", "Rollcalls - chamber", "Rollcalls - rollnumber", "Rollcalls - date",
-        		"Rollcalls - session", "Rollcalls - clerk_rollnumber", "Rollcalls - mid_1", "Rollcalls - mid_2",
-        		"Rollcalls - spread_1", "Rollcalls - spread_2", "Rollcalls - log_likelihood", "Rollcalls - bill_number",
+        		"Rollcalls - rollnumber",
+        		"Rollcalls - session", "Rollcalls - clerk_rollnumber", "Rollcalls - bill_number",
         		"Rollcalls - vote_result", "Rollcalls - vote_desc", "Rollcalls - vote_question", "Rollcalls - dtl_desc",
-        		"Votes - congress", "Votes - chamber", "Votes - rollnumber", "Votes - icpsr", "Votes - cast_code"
+        		"Votes - rollnumber", "Votes - icpsr", "Votes - cast_code"
         		};
         JComboBox sscDropdown = new JComboBox(sscs);
         sscDropdown.setSelectedIndex(0);
-        sscDropdown.setBounds(400,275,290,50);
+        sscDropdown.setBounds(400,275,200,50);
         sscDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		selectedSsc = (String)sscDropdown.getSelectedItem();
         		System.out.println(selectedSsc);
+        	}
+        });
+        
+        String[] tbls = { "None", "Members", "Votes", "Rollcalls", "Parties"};
+        JComboBox tblDropdown = new JComboBox(tbls);
+        tblDropdown.setSelectedIndex(0);
+        tblDropdown.setBounds(700,275,200,50);
+        tblDropdown.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		selectedTbl = (String)tblDropdown.getSelectedItem();
         	}
         });
 
@@ -165,14 +171,40 @@ public class AdvancedSearch extends JFrame {
         	}
         });
         
+        //Start Date Selector
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd"); 
+
+        Date earliestDate = null, latestDate = null;
+        try {
+             earliestDate = formatter.parse("1789-05-16");
+             latestDate = formatter.parse("2017-08-03");
+        } catch(Exception e) {
+        	System.out.println("Failed to parse");
+        }
         
-        JTextField dRangeBlank = new JTextField(20);
-        dRangeBlank.setBounds(600,450,265,50);
-        dRangeBlank.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		dRangeInput = dRangeBlank.getText();
-        		System.out.println(dRangeInput);
-        	}
+        startDate = formatter.format(earliestDate);
+        endDate = formatter.format(latestDate);
+        SpinnerDateModel modelStart = new SpinnerDateModel(earliestDate, earliestDate, latestDate, Calendar.DAY_OF_MONTH);
+        JSpinner dRangeStart = new JSpinner(modelStart);
+        dRangeStart.setEditor(new JSpinner.DateEditor(dRangeStart, "yyyy/mm/dd"));           
+        dRangeStart.setBounds(500,450,200,50);
+        dRangeStart.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                startDate = formatter.format(dRangeStart.getModel().getValue());
+            }
+        });
+        
+        //End Date Selector
+        SpinnerDateModel modelEnd = new SpinnerDateModel(latestDate, earliestDate, latestDate, Calendar.DAY_OF_MONTH);
+        JSpinner dRangeEnd = new JSpinner(modelEnd);
+        dRangeEnd.setEditor(new JSpinner.DateEditor(dRangeEnd, "yyyy/mm/dd"));           
+        dRangeEnd.setBounds(700,450,200,50);
+        dRangeEnd.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                endDate = formatter.format(dRangeStart.getModel().getValue());
+            }
         });
         
         
@@ -192,27 +224,28 @@ public class AdvancedSearch extends JFrame {
 
         
         FieldList congsFieldList = new FieldList();
-        congsFieldList.addField("Chamber",  "\"Senate\"");
+        congsFieldList.addField("chamber",  "\"Senate\"");
         dataEngine.queryParty(congsFieldList);
         ResultSet rs = dataEngine.getResultSet();
         int count = 0;
         String[] congList = new String[116];//length should be number of congresses +1 (for "None")
         congList[0]="None";
         try {
-        while (rs.next ())
-        {
-            String congVal = rs.getString ("congress");
-            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
-            if(!contains) {
-            	++count;
-            	congList[count] = congVal;
-            }
-            
-        }
+	        while (rs.next ())
+	        {
+	            String congVal = rs.getString ("congress");
+	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
+	            if(!contains) {
+	            	++count;
+	            	congList[count] = congVal;
+	            }
+	            
+	        }
         rs.close ();
-        }catch(Exception exc) {
+        } catch(Exception exc) {
         	exc.printStackTrace();
         }
+        
         String[] congs = congList;
         JComboBox congDropdown = new JComboBox(congs);
         congDropdown.setSelectedIndex(0);
@@ -224,12 +257,12 @@ public class AdvancedSearch extends JFrame {
         	}
         });
 
-
-
+        //Button to execute query
         JButton enterDataOne=new JButton("Search");//creating instance of JButton  
         enterDataOne.setBounds(10,560,150,100);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(enterDataOne);
+        //Create query from currently selected attributes
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		if(selectedSsc != "None" && outChamb!="None" && outCong!="None"){
@@ -239,140 +272,70 @@ public class AdvancedSearch extends JFrame {
         			String method = tokens[0];
         			System.out.println(tokens[2]);//gives field
         			String field1 = tokens[2].substring(0);
-        			String field2 = "\"" + outChamb + "\"";
-        			String field3 = outCong;
-        			String field4 = "\"" + dRangeInput + "\"";
         			fillInInput = fillInInput.replace("\"", "");
+        			
+        			//Create the list of fields that the query will use
         			FieldList fieldList = new FieldList();
         			if(field1.equalsIgnoreCase("chamber") || field1.equalsIgnoreCase("state_abbrev") || field1.equalsIgnoreCase("bioname") || 
         					field1.equalsIgnoreCase("bioguide_id") || field1.equalsIgnoreCase("party_name") || field1.equalsIgnoreCase("date") ||
         					field1.equalsIgnoreCase("bill_number") || field1.equalsIgnoreCase("vote_result") || field1.equalsIgnoreCase("vote_desc") ||
         					field1.equalsIgnoreCase("vote_question") || field1.equalsIgnoreCase("dtl_desc")) {//if the field is a string field (any table)
-        				System.out.println("HEY");
         				fillInInput = "\"" + fillInInput + "\"";
         			}
-        			if(method.equalsIgnoreCase("Members")) {
-        				//send to member query
+        			if(field1 != "None")
         				fieldList.addField(field1, fillInInput);
-            			fieldList.addField("Chamber", field2);
-            			fieldList.addField("Congress", field3);
-        				System.out.println("send to member query");
-        				dataEngine.queryMember(fieldList);
-        				ResultSet rs = dataEngine.getResultSet();
-        				try {
-            		        JTable rst = new ResultSetTable(rs);
-            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            		        contentPane.remove(endList);
-            		        Component[] componentList = contentPane.getComponents();
-            		        for(Component c : componentList){
-            		            if(c instanceof JScrollPane){
-            		                contentPane.remove(c);
-            		            }
-            		        }
-            		        JScrollPane pane = new JScrollPane(rst);
-            		        pane.setBounds(175,525,690,150);
-            		        contentPane.add(pane, BorderLayout.CENTER);
-            		        contentPane.revalidate();
-            		        contentPane.repaint();
-        				}catch(Exception ex) {
-        					ex.printStackTrace();
-        				}
-        				
-        			}else if(method.equalsIgnoreCase("Parties")) {
-        				System.out.println("send to party query");
-        				fieldList.addField(field1, fillInInput);
-            			fieldList.addField("Chamber", field2);
-            			fieldList.addField("Congress", field3);
-        				dataEngine.queryParty(fieldList);
-        				ResultSet rs = dataEngine.getResultSet();
-        				try {
-            		        JTable rst = new ResultSetTable(rs);
-            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            		        contentPane.remove(endList);
-            		        Component[] componentList = contentPane.getComponents();
-            		        for(Component c : componentList){
-            		            if(c instanceof JScrollPane){
-            		                contentPane.remove(c);
-            		            }
-            		        }
-            		        JScrollPane pane = new JScrollPane(rst);
-            		        pane.setBounds(175,525,690,150);
-            		        contentPane.add(pane, BorderLayout.CENTER);
-            		        contentPane.revalidate();
-            		        contentPane.repaint();
-        				}catch(Exception ex) {
-        					ex.printStackTrace();
-        				}
-        			}else if(method.equalsIgnoreCase("Rollcalls")) {
-        				System.out.println("send to rollcall query");
-        				fieldList.addField(field1, fillInInput);
-            			fieldList.addField("Chamber", field2);
-            			fieldList.addField("Congress", field3);
-            			System.out.println(field4);
-            			System.out.println(field4.length());
-            			System.out.println(field4.length()>5);
-            			if(field4.length()>6) {
-            				fieldList.addField("date", field4);
-            			}
-        				dataEngine.queryRollcall(fieldList);
-        				ResultSet rs = dataEngine.getResultSet();
-        				try {
-            		        JTable rst = new ResultSetTable(rs);
-            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            		        contentPane.remove(endList);
-            		        Component[] componentList = contentPane.getComponents();
-            		        for(Component c : componentList){
-            		            if(c instanceof JScrollPane){
-            		                contentPane.remove(c);
-            		            }
-            		        }
-            		        JScrollPane pane = new JScrollPane(rst);
-            		        pane.setBounds(175,525,690,150);
-            		        contentPane.add(pane, BorderLayout.CENTER);
-            		        contentPane.revalidate();
-            		        contentPane.repaint();
-        				}catch(Exception ex) {
-        					ex.printStackTrace();
-        				}
-        			}else if(method.equalsIgnoreCase("Votes")) {
-        				System.out.println("send to vote query");
-        				fieldList.addField(field1, fillInInput);
-            			fieldList.addField("Chamber", field2);
-            			fieldList.addField("Congress", field3);
-        				dataEngine.queryVote(fieldList);
-        				ResultSet rs = dataEngine.getResultSet();
-        				try {
-            		        JTable rst = new ResultSetTable(rs);
-            		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            		        contentPane.remove(endList);
-            		        Component[] componentList = contentPane.getComponents();
-            		        for(Component c : componentList){
-            		            if(c instanceof JScrollPane){
-            		                contentPane.remove(c);
-            		            }
-            		        }
-            		        JScrollPane pane = new JScrollPane(rst);
-            		        pane.setBounds(175,525,690,150);
-            		        contentPane.add(pane, BorderLayout.CENTER);
-            		        contentPane.revalidate();
-            		        contentPane.repaint();
-        				}catch(Exception ex) {
-        					ex.printStackTrace();
-        				}
+        			if(outChamb != "None")
+        				fieldList.addField("chamber", "\"" + outChamb + "\"");
+        			if(outCong != "None")
+        				fieldList.addField("congress", outCong);
+        			//MUST ADD ROLLCALL TABLE
+        			fieldList.addField("startDate", startDate);
+        			fieldList.addField("endDate", endDate);
+        			
+        			String tbl = null;
+        			if(selectedTbl != "None" && !method.equalsIgnoreCase(selectedTbl)) {
+        				if(selectedTbl == "Members")
+        					tbl = "HSall_members";
+        				if(selectedTbl == "Parties")
+        					tbl = "HSall_parties";
+        				if(selectedTbl == "Rollcall")
+        					tbl = "HSall_rollcalls";
+        				if(selectedTbl == "Votes")
+        					tbl = "HSall_votes";
         			}
         			
+        			//Select which method to use and obtain results
+        			if(method.equalsIgnoreCase("Members")) {
+        				dataEngine.queryTable(fieldList, "HSall_members", tbl);
+        			} else if(method.equalsIgnoreCase("Parties")) {
+        				dataEngine.queryTable(fieldList, "HSall_parties", tbl);
+        			} else if(method.equalsIgnoreCase("Rollcalls")) {
+        				dataEngine.queryTable(fieldList, "HSall_rollcalls", tbl);
+        			} else if(method.equalsIgnoreCase("Votes")) {
+        				dataEngine.queryTable(fieldList, "HSall_votes", tbl);
+        			} 
+        			ResultSet rs = dataEngine.getResultSet();
         			
-        			
-        			
-        			
-        			
-        			
-        			
-        			
-        			
-        			
-        			
-        		}else{
+        			//Display the results
+    				try {
+        		        JTable rst = new ResultSetTable(rs);
+        		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        		        contentPane.remove(endList);
+        		        Component[] componentList = contentPane.getComponents();
+        		        for(Component c : componentList){
+        		            if(c instanceof JScrollPane){
+        		                contentPane.remove(c);
+        		            }
+        		        }
+        		        JScrollPane pane = new JScrollPane(rst);
+        		        pane.setBounds(175,525,690,150);
+        		        contentPane.add(pane, BorderLayout.CENTER);
+        		        contentPane.revalidate();
+        		        contentPane.repaint();
+    				}catch(Exception ex) {
+    					ex.printStackTrace();
+    				}
+        		} else {
         			System.out.println("Fill in all fields.");
         		}
         	}
@@ -384,10 +347,12 @@ public class AdvancedSearch extends JFrame {
         contentPane.add(dRange);
         contentPane.add(chamb);
         contentPane.add(cong);
-        contentPane.add(dRangeBlank);
+        contentPane.add(dRangeStart);
+        contentPane.add(dRangeEnd);
         contentPane.add(fillInBlank);
         contentPane.add(endList);
         contentPane.add(sscDropdown);
+        contentPane.add(tblDropdown);
         contentPane.add(chamberDropdown);
         contentPane.add(congDropdown);
 

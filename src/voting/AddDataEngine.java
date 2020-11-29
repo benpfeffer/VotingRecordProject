@@ -1,5 +1,6 @@
-import java.sql.*;
+package voting;
 
+import java.sql.*;
 
 public class AddDataEngine {
 	
@@ -9,7 +10,7 @@ public class AddDataEngine {
 		try
         {
           // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:C:/Users/salba/Documents/CIS452 Databases/VotingRecordProject/voting.sqlite");
+          connection = DriverManager.getConnection("jdbc:sqlite:../../voting.db");
           stmt = connection.createStatement();
           System.out.println("Connection successful");
         }
