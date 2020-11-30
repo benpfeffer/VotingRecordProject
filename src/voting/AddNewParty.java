@@ -143,7 +143,7 @@ public class AddNewParty extends JFrame {
         	}
         });
 
-        String[] chambers = { "None", "Chamber1", "Chamber2", "Chamber3", "Chamber4", "Chamber5" };
+        String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
         chamberDropdown.setBounds(550,365,290,50);

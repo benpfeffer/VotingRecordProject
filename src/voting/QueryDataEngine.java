@@ -109,7 +109,7 @@ public class QueryDataEngine {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+	/*
 	public void queryVote(FieldList fieldList) {
 		try {
 			String queryText = "select * from HSall_votes where ";
@@ -300,7 +300,7 @@ public class QueryDataEngine {
 	
 	/////////////end 2 table connections
 	
-	
+	*/
 	public ResultSet getResultSet() {
 		return rs;
 	}

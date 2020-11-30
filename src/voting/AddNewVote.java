@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -151,7 +153,31 @@ public class AddNewVote extends JFrame {
         voteNum.setBackground(new Color(255, 255, 255));
         voteNum.setBorder(blackline);
 
-        String[] congresses = { "None", "Congress1", "Congress2", "Congress3", "Congress4", "Congress5" };
+        QueryDataEngine dataEngine = new QueryDataEngine();
+        FieldList congsFieldList = new FieldList();
+        congsFieldList.addField("chamber",  "\"Senate\"");
+        dataEngine.queryTable(congsFieldList, "HSall_parties", null);
+        ResultSet rs = dataEngine.getResultSet();
+        int count = 0;
+        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
+        congList[0]="None";
+        try {
+	        while (rs.next ())
+	        {
+	            String congVal = rs.getString ("congress");
+	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
+	            if(!contains) {
+	            	++count;
+	            	congList[count] = congVal;
+	            }
+	            
+	        }
+        rs.close ();
+        } catch(Exception exc) {
+        	exc.printStackTrace();
+        }
+        
+        String[] congresses = congList;
         JComboBox congressDropdown = new JComboBox(congresses);
         congressDropdown.setSelectedIndex(0);
         congressDropdown.setBounds(550,275,290,50);
@@ -165,7 +191,7 @@ public class AddNewVote extends JFrame {
         });
 
 
-        String[] chambers = { "None", "Chamber1", "Chamber2", "Chamber3", "Chamber4", "Chamber5" };
+        String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
         chamberDropdown.setBounds(550,335,290,50);
@@ -178,33 +204,30 @@ public class AddNewVote extends JFrame {
         	}
         });
 
-        String[] rollNums = { "None", "1", "2", "3", "4", "5" };
-        JComboBox rollNumDropdown = new JComboBox(rollNums);
-        rollNumDropdown.setSelectedIndex(0);
+        
+        JTextField rollNumDropdown = new JTextField(20);
         rollNumDropdown.setBounds(550,395,290,50);
-        String selectedRollNum = (String)rollNumDropdown.getSelectedItem();
+        String selectedRollNum = (String)rollNumDropdown.getText();
         rollNumDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedRollNum = (String)rollNumDropdown.getSelectedItem();
+        		String selectedRollNum = (String)rollNumDropdown.getText();
         		outRollNum = selectedRollNum;
         		System.out.println(selectedRollNum);
         	}
         });
 
-        String[] icps = { "None", "icp1", "icp2", "icp3", "icp4", "icp5" };
-        JComboBox icpDropdown = new JComboBox(icps);
-        icpDropdown.setSelectedIndex(0);
+        JTextField icpDropdown = new JTextField(20);
         icpDropdown.setBounds(550,455,290,50);
-        String selectedIcp = (String)icpDropdown.getSelectedItem();
+        String selectedIcp = (String)icpDropdown.getText();
         icpDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedIcp = (String)icpDropdown.getSelectedItem();
+        		String selectedIcp = (String)icpDropdown.getText();
         		outIcp = selectedIcp;
         		System.out.println(selectedIcp);
         	}
         });
 
-        String[] castCodes = { "None", "Code1", "Code2", "Code3", "Code4", "Code5" };
+        String[] castCodes = { "None", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
         JComboBox castCodeDropdown = new JComboBox(castCodes);
         castCodeDropdown.setSelectedIndex(0);
         castCodeDropdown.setBounds(550,515,290,50);

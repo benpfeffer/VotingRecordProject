@@ -5,6 +5,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -198,7 +203,31 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
-        String[] congresses = { "None", "Congress1", "Congress2", "Congress3", "Congress4", "Congress5" };
+        QueryDataEngine dataEngine = new QueryDataEngine();
+        FieldList congsFieldList = new FieldList();
+        congsFieldList.addField("chamber",  "\"Senate\"");
+        dataEngine.queryTable(congsFieldList, "HSall_parties", null);
+        ResultSet rs = dataEngine.getResultSet();
+        int count = 0;
+        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
+        congList[0]="None";
+        try {
+	        while (rs.next ())
+	        {
+	            String congVal = rs.getString ("congress");
+	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
+	            if(!contains) {
+	            	++count;
+	            	congList[count] = congVal;
+	            }
+	            
+	        }
+        rs.close ();
+        } catch(Exception exc) {
+        	exc.printStackTrace();
+        }
+        
+        String[] congresses = congList;
         JComboBox congressDropdown = new JComboBox(congresses);
         congressDropdown.setSelectedIndex(0);
         congressDropdown.setBounds(550,275,290,50);
@@ -212,7 +241,7 @@ public class AddNewRollcall extends JFrame {
         });
 
 
-        String[] chambers = { "None", "Chamber1", "Chamber2", "Chamber3", "Chamber4", "Chamber5" };
+        String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
         chamberDropdown.setBounds(550,320,290,50);
@@ -225,17 +254,28 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
-        String[] rollNums = { "None", "Date1", "Date2", "Date3", "Date4", "Date5" };
-        JComboBox rollNumDropdown = new JComboBox(rollNums);
-        rollNumDropdown.setSelectedIndex(0);
-        rollNumDropdown.setBounds(550,365,290,50);
-        String selectedRollNum = (String)rollNumDropdown.getSelectedItem();
-        rollNumDropdown.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		String selectedRollNum = (String)rollNumDropdown.getSelectedItem();
-        		outRollNum = selectedRollNum;
-        		System.out.println(selectedRollNum);
-        	}
+      //Start Date Selector
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd"); 
+
+        Date earliestDate = null, latestDate = null, targetDate = null;
+        try {
+             earliestDate = formatter.parse("1789-05-16");
+             latestDate = formatter.parse("2099-12-31");
+             targetDate = formatter.parse("2017-08-03");
+        } catch(Exception e) {
+        	System.out.println("Failed to parse");
+        }
+        
+        dDescInput = "2017-08-03";
+        SpinnerDateModel modelStart = new SpinnerDateModel(targetDate, earliestDate, latestDate, Calendar.DAY_OF_MONTH);
+        JSpinner rollDate = new JSpinner(modelStart);
+        rollDate.setEditor(new JSpinner.DateEditor(rollDate, "yyyy/mm/dd"));           
+        rollDate.setBounds(550,380,200,30);
+        rollDate.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                dDescInput = formatter.format(rollDate.getModel().getValue());
+            }
         });
 
         JTextField sessBlank = new JTextField(20);
@@ -314,7 +354,7 @@ public class AddNewRollcall extends JFrame {
         contentPane.add(rollNum);
         contentPane.add(congressDropdown);
         contentPane.add(chamberDropdown);
-        contentPane.add(rollNumDropdown);
+        contentPane.add(rollDate);
         contentPane.add(t1);
 
 

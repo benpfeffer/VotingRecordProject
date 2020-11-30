@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -19,7 +21,6 @@ public class AddNewMember extends JFrame {
     private JTextField txtEnter_1;
     private JTextField txtValue;
     private JTextField txtValue_1;
-    //private final Action action = new SwingAction();
     public static String nameInput = "None";
     public static String bdInput = "None";
     public static String bioGuideInput = "None";
@@ -114,59 +115,58 @@ public class AddNewMember extends JFrame {
         });
      
         JLabel name = new JLabel("Name", JLabel.CENTER);
-        name.setBounds(400,245,100,50);
+        name.setBounds(400,255,100,30);
         name.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         name.setOpaque(true);
         name.setBackground(new Color(255, 255, 255));
 
         JLabel bd = new JLabel("Birthdate", JLabel.CENTER);
-        bd.setBounds(400,285,100,50);
+        bd.setBounds(400,295,100,30);
         bd.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         bd.setOpaque(true);
         bd.setBackground(new Color(255, 255, 255));
 
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
-        chamb.setBounds(400,325,100,50);
+        chamb.setBounds(400,335,100,30);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
         chamb.setBackground(new Color(255, 255, 255));
 
         JLabel state = new JLabel("State", JLabel.CENTER);
-        state.setBounds(375,365,150,50);
+        state.setBounds(375,375,150,30);
         state.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         state.setOpaque(true);
         state.setBackground(new Color(255, 255, 255));
 
         JLabel district = new JLabel("District", JLabel.CENTER);
-        district.setBounds(665,365,75,50);
+        district.setBounds(665,375,75,30);
         district.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         district.setOpaque(true);
         district.setBackground(new Color(255, 255, 255));
 
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
-        cong.setBounds(400,405,100,50);
+        cong.setBounds(400,415,100,30);
         cong.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cong.setOpaque(true);
         cong.setBackground(new Color(255, 255, 255));
 
         JLabel party = new JLabel("Party", JLabel.CENTER);
-        party.setBounds(400,445,100,50);
+        party.setBounds(400,455,100,30);
         party.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         party.setOpaque(true);
         party.setBackground(new Color(255, 255, 255));
 
         JLabel bioGuide = new JLabel("Bio Guide", JLabel.CENTER);
-        bioGuide.setBounds(400,485,100,50);
+        bioGuide.setBounds(400,495,100,30);
         bioGuide.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         bioGuide.setOpaque(true);
         bioGuide.setBackground(new Color(255, 255, 255));
 
         JLabel icp = new JLabel("ICPSR", JLabel.CENTER);
-        icp.setBounds(400,525,100,50);
+        icp.setBounds(400,535,100,30);
         icp.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         icp.setOpaque(true);
         icp.setBackground(new Color(255, 255, 255));
-
 
 
         JTextField nameBlank = new JTextField(20);
@@ -187,12 +187,10 @@ public class AddNewMember extends JFrame {
         	}
         });
 
-
-
-        String[] chambers = { "None", "Chamber1", "Chamber2", "Chamber3", "Chamber4", "Chamber5" };
+        String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
-        chamberDropdown.setBounds(550,325,290,50);
+        chamberDropdown.setBounds(550,335,290,30);
         String selectedChamber = (String)chamberDropdown.getSelectedItem();
         chamberDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -202,10 +200,10 @@ public class AddNewMember extends JFrame {
         	}
         });
 
-        String[] states = { "None", "1", "2", "3", "4", "5" };
+        String[] states = { "None", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI","SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
         JComboBox stateDropdown = new JComboBox(states);
         stateDropdown.setSelectedIndex(0);
-        stateDropdown.setBounds(550,365,90,50);
+        stateDropdown.setBounds(550,375,90,30);
         String selectedState = (String)stateDropdown.getSelectedItem();
         stateDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -214,10 +212,13 @@ public class AddNewMember extends JFrame {
         	}
         });
 
-        String[] districts = { "None", "1", "2", "3", "4", "5" };
+        String[] districts = new String[56];
+        for(int i = 0; i < 56; i++) {
+        	districts[i] = Integer.toString(i);
+        }
         JComboBox districtDropdown = new JComboBox(districts);
         districtDropdown.setSelectedIndex(0);
-        districtDropdown.setBounds(750,365,90,50);
+        districtDropdown.setBounds(750,375,90,30);
         String selectedDistrict = (String)districtDropdown.getSelectedItem();
         districtDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -226,10 +227,35 @@ public class AddNewMember extends JFrame {
         	}
         });
 
-        String[] congs = { "None", "Congress1", "Congress2", "Congress3", "Congress4", "Congress5" };
+      //Congress Selector using query engine
+        QueryDataEngine dataEngine = new QueryDataEngine();
+        FieldList congsFieldList = new FieldList();
+        congsFieldList.addField("chamber",  "\"Senate\"");
+        dataEngine.queryTable(congsFieldList, "HSall_parties", null);
+        ResultSet rs = dataEngine.getResultSet();
+        int count = 0;
+        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
+        congList[0]="None";
+        try {
+	        while (rs.next ())
+	        {
+	            String congVal = rs.getString ("congress");
+	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
+	            if(!contains) {
+	            	++count;
+	            	congList[count] = congVal;
+	            }
+	            
+	        }
+        rs.close ();
+        } catch(Exception exc) {
+        	exc.printStackTrace();
+        }
+        
+        String[] congs = congList;
         JComboBox congDropdown = new JComboBox(congs);
         congDropdown.setSelectedIndex(0);
-        congDropdown.setBounds(550,405,290,50);
+        congDropdown.setBounds(550,415,290,30);
         String selectedCongs = (String)congDropdown.getSelectedItem();
         congDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -241,7 +267,7 @@ public class AddNewMember extends JFrame {
         String[] parties = { "None", "Dem", "Rep", "Ind", "Green", "Libertarian" };
         JComboBox partyDropdown = new JComboBox(parties);
         partyDropdown.setSelectedIndex(0);
-        partyDropdown.setBounds(550,445,290,50);
+        partyDropdown.setBounds(550,455,290,30);
         String selectedParty = (String)partyDropdown.getSelectedItem();
         partyDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -269,7 +295,7 @@ public class AddNewMember extends JFrame {
         });
 
         JButton enterDataOne=new JButton("Enter Data");//creating instance of JButton  
-        enterDataOne.setBounds(650,595,215,50);//x axis, y axis, width, height 
+        enterDataOne.setBounds(650,595,215,30);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(enterDataOne);
         enterDataOne.addActionListener(new ActionListener() {

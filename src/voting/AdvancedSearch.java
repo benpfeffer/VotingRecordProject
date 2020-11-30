@@ -26,7 +26,6 @@ public class AdvancedSearch extends JFrame {
     private JTextField txtEnter_1;
     private JTextField txtValue;
     private JTextField txtValue_1;
-    //private final Action action = new SwingAction();
     public static String startDate = "None";
     public static String endDate = "None";
     public static String fillInInput = "None";
@@ -37,9 +36,11 @@ public class AdvancedSearch extends JFrame {
     public static String selectedSsc = "None";
     public static String selectedTbl = "None";
     
+    //Set up query engine to handle SQL queries
     QueryDataEngine dataEngine = new QueryDataEngine();
     
     public AdvancedSearch() {
+    	//Set up the outline of the GUI
         Border blackline = BorderFactory.createLineBorder(Color.black);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
@@ -50,7 +51,7 @@ public class AdvancedSearch extends JFrame {
         
         //back button
         JButton menu = new JButton("Menu");//creating instance of JButton  
-        menu.setBounds(40,40,75,50);//x axis, y axis, width, height 
+        menu.setBounds(40,40,150,50);//x axis, y axis, width, height 
         menu.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(menu);
         menu.addActionListener(new ActionListener() {
@@ -70,9 +71,9 @@ public class AdvancedSearch extends JFrame {
   	    title.setBackground(new Color(255, 255, 255));
         contentPane.add(title);
 
-
+        //Switch to go to basic search
         JButton bSearch=new JButton("Basic Search");//creating instance of JButton  
-	      bSearch.setBounds(175,200,290,80);//x axis, y axis, width, height 
+	      bSearch.setBounds(175,200,290,60);//x axis, y axis, width, height 
         bSearch.setFont(new Font("Sans-serif", Font.PLAIN, 32));
         bSearch.setBorderPainted(false);
         contentPane.add(bSearch);
@@ -86,9 +87,9 @@ public class AdvancedSearch extends JFrame {
         }
           });
         
-        
+        //Switch to go to advanced search
         JButton aSearch=new JButton("Advanced Search");//creating instance of JButton  
-	      aSearch.setBounds(470,200,310,80);//x axis, y axis, width, height 
+	      aSearch.setBounds(470,200,310,60);//x axis, y axis, width, height 
         aSearch.setFont(new Font("Sans-serif", Font.PLAIN, 32));
         Font btnFont = aSearch.getFont();
         Map attributes = btnFont.getAttributes();
@@ -97,32 +98,38 @@ public class AdvancedSearch extends JFrame {
         aSearch.setFont(btnFont);
         aSearch.setBorderPainted(false);
         contentPane.add(aSearch);
-
+        
+        //Label to Select which variable to search
         JLabel ssc = new JLabel("Select Search Criteria", JLabel.CENTER);
         ssc.setBounds(175,275,200,50);
         ssc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         ssc.setOpaque(true);
-
+        
+        //Label for variable search input
         JLabel fillLabel = new JLabel("Search on value :", JLabel.CENTER);
         fillLabel.setBounds(175,325,200,50);
         fillLabel.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         fillLabel.setOpaque(true);
         
+        //Label for date selector
         JLabel dRange = new JLabel("Date (YYYY-MM-DD)", JLabel.CENTER);
         dRange.setBounds(175,450,250,50);
         dRange.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         dRange.setOpaque(true);
 
+        //Label for Congress selector
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
         cong.setBounds(175,375,200,50);
         cong.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cong.setOpaque(true);
 
+        //Label for Chamber selector
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
         chamb.setBounds(560,375,125,50);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
 
+        //Area to display search results
         JLabel endList = new JLabel("<html>List of parties / members / votes / rollcalls. <br/> Click on a given item to display the basic search attributes.</html>", JLabel.CENTER);
         endList.setBounds(175,525,690,150);
         endList.setFont(new Font("Sans-serif", Font.PLAIN, 18));
@@ -130,16 +137,15 @@ public class AdvancedSearch extends JFrame {
         endList.setBackground(new Color(255, 255, 255));
         endList.setBorder(blackline);
 
-
+        //Options for variables to search by
         String[] sscs = { "None", "Members - icpsr",
         		"Members - state_icpsr", "Members - district_code", "Members - state_abbrev", "Members - party_code", 
         		"Members - occupancy", "Members - last_means", "Members - bioname", "Members - bioguide_id",
         		"Members - born", "Members - died", "Members - number_of_votes", "Members - number_of_errors",
         		"Parties - party_code", "Parties - party_name", "Parties - n_members",
-        		"Parties - dim1_median", "Parties - dim2_median", "Parties - dim1_mean", "Parties - dim2_mean",
         		"Rollcalls - rollnumber",
         		"Rollcalls - session", "Rollcalls - clerk_rollnumber", "Rollcalls - bill_number",
-        		"Rollcalls - vote_result", "Rollcalls - vote_desc", "Rollcalls - vote_question", "Rollcalls - dtl_desc",
+        		"Rollcalls - vote_result", "Rollcalls - vote_question",
         		"Votes - rollnumber", "Votes - icpsr", "Votes - cast_code"
         		};
         JComboBox sscDropdown = new JComboBox(sscs);
@@ -152,6 +158,7 @@ public class AdvancedSearch extends JFrame {
         	}
         });
         
+        //Tables to search on
         String[] tbls = { "None", "Members", "Votes", "Rollcalls", "Parties"};
         JComboBox tblDropdown = new JComboBox(tbls);
         tblDropdown.setSelectedIndex(0);
@@ -162,6 +169,7 @@ public class AdvancedSearch extends JFrame {
         	}
         });
 
+        //Area to type search criteria
         JTextField fillInBlank = new JTextField(20);
         fillInBlank.setBounds(400,325,465,50);
         fillInBlank.addActionListener(new ActionListener() {
@@ -208,7 +216,7 @@ public class AdvancedSearch extends JFrame {
         });
         
         
-        
+        //Chamber Selector
         String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
@@ -222,10 +230,10 @@ public class AdvancedSearch extends JFrame {
         	}
         });
 
-        
+        //Congress Selector
         FieldList congsFieldList = new FieldList();
         congsFieldList.addField("chamber",  "\"Senate\"");
-        dataEngine.queryParty(congsFieldList);
+        dataEngine.queryTable(congsFieldList, "HSall_parties", null);
         ResultSet rs = dataEngine.getResultSet();
         int count = 0;
         String[] congList = new String[116];//length should be number of congresses +1 (for "None")
@@ -333,15 +341,15 @@ public class AdvancedSearch extends JFrame {
         		        contentPane.revalidate();
         		        contentPane.repaint();
     				}catch(Exception ex) {
-    					ex.printStackTrace();
+    					endList.setText("<html>Invalid search value for the selected variable. Please try again.</html>");
     				}
         		} else {
-        			System.out.println("Fill in all fields.");
+        			endList.setText("<html>Please fill in all necessary fields.</html>");
         		}
         	}
         });
 
-
+        //Display everything on the GUI
         contentPane.add(ssc);
         contentPane.add(fillLabel);
         contentPane.add(dRange);

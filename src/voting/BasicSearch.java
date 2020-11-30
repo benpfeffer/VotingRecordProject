@@ -21,18 +21,17 @@ import java.awt.Component;
 
 public class BasicSearch extends JFrame {
 	private JPanel contentPane;
-    //private final Action action = new SwingAction();
     public static String epmvrInput = "None";
     public static String selectedSsc = "None";
-    public static String selectedInclude = "None";
     public static String outIcp = "None";
     public static String outCast = "None";
     public static String[] columns = { "Select Search Criteria First" };
     
-    //create query data engine object
+    //create query data engine object to handle SQL queries
     QueryDataEngine dataEngine = new QueryDataEngine();
 
     public BasicSearch() {
+    	//Set up the basics of the GUI
         Border blackline = BorderFactory.createLineBorder(Color.black);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
@@ -41,9 +40,9 @@ public class BasicSearch extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        //back button
+        //Back Button
         JButton menu = new JButton("Menu");//creating instance of JButton  
-        menu.setBounds(40,40,75,50);//x axis, y axis, width, height 
+        menu.setBounds(40,40,150,50);//x axis, y axis, width, height 
         menu.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(menu);
         menu.addActionListener(new ActionListener() {
@@ -55,7 +54,7 @@ public class BasicSearch extends JFrame {
         });
 
         
-        //add title
+        //Title
         JLabel title = new JLabel("Congressional Voting Database", JLabel.CENTER);
         title.setBounds(40,40,880,160);
         title.setFont(new Font("Sans-serif", Font.PLAIN, 48));
@@ -65,7 +64,7 @@ public class BasicSearch extends JFrame {
 
         //Switch to select Basic Search
         JButton bSearch=new JButton("Basic Search");//creating instance of JButton  
-        bSearch.setBounds(175,200,290,80);//x axis, y axis, width, height 
+        bSearch.setBounds(175,200,290,60);//x axis, y axis, width, height 
         bSearch.setFont(new Font("Sans-serif", Font.PLAIN, 32));
         Font btnFont = bSearch.getFont();
         Map attributes = btnFont.getAttributes();
@@ -77,7 +76,7 @@ public class BasicSearch extends JFrame {
         
         //Switch to select Advanced Search
         JButton aSearch=new JButton("Advanced Search");//creating instance of JButton  
-        aSearch.setBounds(470,200,310,80);//x axis, y axis, width, height 
+        aSearch.setBounds(470,200,310,60);//x axis, y axis, width, height 
         aSearch.setFont(new Font("Sans-serif", Font.PLAIN, 32));
         aSearch.setBorderPainted(false);
         contentPane.add(aSearch);
@@ -91,34 +90,27 @@ public class BasicSearch extends JFrame {
         	}
         });
 		
-        //Column to Query       
+        //Label for button to select query     
         JLabel ssc = new JLabel("Select Search Criteria", JLabel.CENTER);
-        ssc.setBounds(175,258,290,50);
+        ssc.setBounds(150,280,290,50);
         ssc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         ssc.setOpaque(true);
-		
-        //Table to Search
-        /*
-        JLabel includeLabel = new JLabel("Include", JLabel.CENTER);
-        includeLabel.setBounds(175,350,290,50);
-        includeLabel.setFont(new Font("Sans-serif", Font.PLAIN, 18));
-        includeLabel.setOpaque(true);
-        */
         
-        //Value
-        JLabel epmvr = new JLabel("Enter Party / Member / Vote / Rollcall:", JLabel.CENTER);
-        epmvr.setBounds(150,305,340,50);
-        epmvr.setFont(new Font("Sans-serif", Font.PLAIN, 18));
+        //Label for the currently selected value
+        JLabel epmvr = new JLabel("<html><center>Type value to match to selected variable. <br>Don't forget to press enter once you have input the value!</center></html>", JLabel.CENTER);
+        epmvr.setBounds(150,330,340,55);
+        epmvr.setFont(new Font("Sans-serif", Font.PLAIN, 14));
         epmvr.setOpaque(true);
 
-        //Display Area
+        //Display area for results
         JLabel endList = new JLabel("<html>List of parties / members / votes / rollcalls. <br/> Click on a given item to display the basic search attributes.</html>", JLabel.CENTER);
         endList.setBounds(175,400,585,275);
         endList.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         endList.setOpaque(true);
         endList.setBackground(new Color(255, 255, 255));
         endList.setBorder(blackline);
-                
+        
+        //Choices for variables to search by
         String[] sscs = { "None", "Members - congress", "Members - chamber", "Members - icpsr",
         		"Members - state_icpsr", "Members - district_code", "Members - state_abbrev", "Members - party_code", 
         		"Members - occupancy", "Members - last_means", "Members - bioname", "Members - bioguide_id",
@@ -132,46 +124,33 @@ public class BasicSearch extends JFrame {
         
         JComboBox sscDropdown = new JComboBox(sscs);
         sscDropdown.setSelectedIndex(0);
-        sscDropdown.setBounds(490,260,270,50);
+        sscDropdown.setBounds(490,285,270,50);
         sscDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		selectedSsc = (String)sscDropdown.getSelectedItem();
-        		System.out.println(selectedSsc);
-        		
+        		selectedSsc = (String)sscDropdown.getSelectedItem();        		
         	}
         });
         
-        /*
-        String[] includes = {"None", "Members", "Parties", "Rollcalls", "Votes"};
-        JComboBox includeDropdown = new JComboBox(includes);
-        includeDropdown.setSelectedIndex(0);
-        includeDropdown.setBounds(490,350,270,50);
-        includeDropdown.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		selectedInclude = (String)includeDropdown.getSelectedItem();
-        		System.out.println(selectedInclude);
-        		
-        	}
-        });
-        */
-        
+        //Text Entry for searching
         JTextField epmvrBlank = new JTextField(20);
-        epmvrBlank.setBounds(490,305,270,50);
+        epmvrBlank.setBounds(490,335,270,50);
         epmvrBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		epmvrInput = epmvrBlank.getText();
-        		System.out.println(epmvrInput);
+        		//Protect against SQL injection attacks!
+        		String[] tokens = epmvrInput.split(" ", 2);
+        		epmvrInput = tokens[0];
         	}
         });
         
-        //Enter Data
+        //Search Button
         JButton enterDataOne=new JButton("Search");//creating instance of JButton  
         enterDataOne.setBounds(10,560,150,100);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(enterDataOne);
         JFrame currFrame = (JFrame) SwingUtilities.windowForComponent(contentPane);
         
-        
+        //Execute SQL query when the search button is pressed
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e){
         		if(epmvrInput != "None"){
@@ -203,7 +182,7 @@ public class BasicSearch extends JFrame {
         			}
         			
         			ResultSet rs = dataEngine.getResultSet();
-        				
+        			//display the table on the GUI
     				try {
         		        JTable rst = new ResultSetTable(rs);
         		        rst.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -220,20 +199,19 @@ public class BasicSearch extends JFrame {
         		        contentPane.revalidate();
         		        contentPane.repaint();
     				} catch(Exception ex) {
-    					ex.printStackTrace();
+    					//handle the error that occurs if users do not enter a valid value for the variable they are searching
+    					endList.setText("<html>Invalid search value for the selected variable. Please try again.</html>");
     				}
         		}
         	}
         });
 
-
+        //Display everything
         contentPane.add(ssc);
         contentPane.add(epmvr);
         contentPane.add(epmvrBlank);
         contentPane.add(endList);
         contentPane.add(sscDropdown);
-        //contentPane.add(includeDropdown);
-        //contentPane.add(includeLabel);
 
     }
 }
