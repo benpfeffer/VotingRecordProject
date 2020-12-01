@@ -109,6 +109,15 @@ public class QueryDataEngine {
 			System.err.println(e.getMessage());
 		}
 	}
+	
+	public void queryAll(String tbl) {
+		try {
+			String queryText = "select * from " + tbl;
+			rs = stmt.executeQuery(queryText);
+		} catch(SQLException e) {
+			System.err.println(e.getMessage());
+		}
+	}
 	/*
 	public void queryVote(FieldList fieldList) {
 		try {

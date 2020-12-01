@@ -10,7 +10,7 @@ public class AddDataEngine {
 		try
         {
           // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:../../voting.db");
+          connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\salba\\Documents\\CIS452 Databases\\VotingRecordProject\\voting.db");
           stmt = connection.createStatement();
           System.out.println("Connection successful");
         }
@@ -41,16 +41,16 @@ public class AddDataEngine {
 		vote_result + ", " + 
 		vote_desc + ", " + 
 		vote_question + ", " + 
-		dtl_desc);
+		dtl_desc + ")");
 			} catch(SQLException e) {
 				System.err.println(e.getMessage());
 			}
 	}
 	
-	public void addMember(int congress, String chamber, int icpsr, int state_icpsr, int district_code, String state_abbrev, int party_code, int occupancy, int last_means, String bioname, String bioguide_id, int born, int died, int number_of_votes, int number_of_errors) {
+	public void addMember(String congress, String chamber, int icpsr, int state_icpsr, int district_code, String state_abbrev, int party_code, int occupancy, int last_means, String bioname, String bioguide_id, int born, int died, int number_of_votes, int number_of_errors) {
 		try {
 			stmt.executeUpdate("insert into HSall_members(congress, chamber, icpsr, state_icpsr, district_code, state_abbrev, party_code, occupancy, last_means, bioname, bioguide_id, born, died, number_of_votes, number_of_errors) values(" + 
-		Integer.toString(congress) + ", " + 
+		congress + ", " + 
 		chamber + ", " + 
 		Integer.toString(icpsr) + ", " + 
 		Integer.toString(state_icpsr) + ", " + 
@@ -62,20 +62,20 @@ public class AddDataEngine {
 		bioname + ", " + 
 		bioguide_id + ", " + 
 		Integer.toString(number_of_votes) + ", " + 
-		Integer.toString(number_of_errors));
+		Integer.toString(number_of_errors) + ")");
 			} catch(SQLException e) {
 				System.err.println(e.getMessage());
 			}
 	}
 	
-	public void addParty(int congress, String chamber, int party_code, String party_name, int n_members) {
+	public void addParty(String congress, String chamber, String party_code, String party_name, String n_members) {
 		try {
-			stmt.executeUpdate("insert into HSall_members values(" + 
-		Integer.toString(congress) + ", " + 
-		chamber + ", " + 
-		Integer.toString(party_code) + ", " + 
-		party_name + ", " + 
-		Integer.toString(n_members));
+			stmt.executeUpdate("insert into HSall_parties(congress, chamber, party_code, party_name, n_members) values(\"" + 
+		congress + "\", \"" + 
+		chamber + "\", \"" + 
+		party_code + "\", \"" + 
+		party_name + "\", \"" + 
+		n_members + "\")");
 			} catch(SQLException e) {
 				System.err.println(e.getMessage());
 			}

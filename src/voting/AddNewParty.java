@@ -5,26 +5,24 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class AddNewParty extends JFrame {
 	private JPanel contentPane;
-    private JTextField txtTypeYourQuestion;
-    private JTextField txtQuestionWeight;
-    private JTextField txtEnter;
-    private JTextField txtEnter_1;
-    private JTextField txtValue;
-    private JTextField txtValue_1;
-    //private final Action action = new SwingAction();
+
     public static String partyInput = "None";
     public static String outChamb = "None";
-    public static String outRollNum = "None";
-    public static String outIcp = "None";
-    public static String outCast = "None";
+    public static String outCongress = "None";
+    public static String outCode = "1";
+    public static String members = "0";
 
 
     public AddNewParty() {
@@ -116,18 +114,56 @@ public class AddNewParty extends JFrame {
         pName.setBackground(new Color(255, 255, 255));
 
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
-        chamb.setBounds(400,365,100,50);
+        chamb.setBounds(400,345,100,50);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
         chamb.setBackground(new Color(255, 255, 255));
 
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
-        cong.setBounds(375,455,150,50);
+        cong.setBounds(375,405,150,50);
         cong.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cong.setOpaque(true);
         cong.setBackground(new Color(255, 255, 255));
-
-        JLabel pCode = new JLabel("Party Code: ####", JLabel.CENTER);
+        
+        JLabel memb = new JLabel("No. of Members", JLabel.CENTER);
+        memb.setBounds(375,455,150,60);
+        memb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
+        memb.setOpaque(true);
+        memb.setBackground(new Color(255, 255, 255));
+        
+        JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
+        notifier.setBounds(375,530,500,50);
+        notifier.setFont(new Font("Sans-serif", Font.PLAIN, 14));
+        notifier.setOpaque(true);
+        notifier.setBackground(new Color(255, 255, 255));
+      
+        //Generate new party code
+        QueryDataEngine queryEngine = new QueryDataEngine();
+        queryEngine.queryAll("HSall_parties");
+        ResultSet rs = queryEngine.getResultSet();
+        int count = 0;
+        ArrayList<String> codeList = new ArrayList<String>();
+        try {
+	        while (rs.next ())
+	        {
+	            codeList.add(rs.getString("party_code"));	            
+	        }
+        rs.close ();
+        } catch(Exception exc) {
+        	exc.printStackTrace();
+        }
+        Random rand = new Random();
+        boolean available = false;
+        while(!available) {
+            outCode = Integer.toString(rand.nextInt(999));
+            available = true;
+            for(String item : codeList) {
+            	if(item.equals(outCode))
+            		available = false;
+            }
+        }
+        String codeLabel = "Party Code: " + outCode;
+        JLabel pCode = new JLabel(codeLabel, JLabel.CENTER);
         pCode.setBounds(410,595,215,50);
         pCode.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         pCode.setOpaque(true);
@@ -146,29 +182,31 @@ public class AddNewParty extends JFrame {
         String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
-        chamberDropdown.setBounds(550,365,290,50);
+        chamberDropdown.setBounds(550,345,290,50);
         String selectedChamber = (String)chamberDropdown.getSelectedItem();
         chamberDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		String selectedChamber = (String)chamberDropdown.getSelectedItem();
         		outChamb = selectedChamber;
-        		System.out.println(selectedChamber);
         	}
         });
 
-        String[] rollNums = { "None", "1", "2", "3", "4", "5" };
-        JComboBox rollNumDropdown = new JComboBox(rollNums);
-        rollNumDropdown.setSelectedIndex(0);
-        rollNumDropdown.setBounds(550,455,290,50);
-        String selectedRollNum = (String)rollNumDropdown.getSelectedItem();
-        rollNumDropdown.addActionListener(new ActionListener() {
+       
+        JTextField congressFill = new JTextField(20);
+        congressFill.setBounds(550,405,290,50);
+        congressFill.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedRollNum = (String)rollNumDropdown.getSelectedItem();
-        		outRollNum = selectedRollNum;
-        		System.out.println(selectedRollNum);
+        		outCongress = congressFill.getText();
         	}
         });
-
+        
+        JTextField membersFill = new JTextField(20);
+        membersFill.setBounds(550,465,290,50);
+        membersFill.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		members = congressFill.getText();
+        	}
+        });
 
 
         JButton enterDataOne=new JButton("Enter Data");//creating instance of JButton  
@@ -177,12 +215,43 @@ public class AddNewParty extends JFrame {
         contentPane.add(enterDataOne);
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if(partyInput!="None" && outChamb!="None" && outRollNum!="None"){
-        			System.out.println("Entered data.");
-        			System.out.println(partyInput);
+        		if(partyInput!="None" && outChamb!="None" && outCongress !="None"){        			
+        			//Add the data to the database using SQL
+        			AddDataEngine dataEngine = new AddDataEngine();
+        			dataEngine.addParty(outCongress, outChamb, outCode, partyInput, members);
+        			
+        			//Generate new party code
+        	        QueryDataEngine queryEngine = new QueryDataEngine();
+        	        queryEngine.queryAll("HSall_parties");
+        	        ResultSet rs = queryEngine.getResultSet();
+        	        int count = 0;
+        	        ArrayList<String> codeList = new ArrayList<String>();
+        	        try {
+        		        while (rs.next ())
+        		        {
+        		            codeList.add(rs.getString("party_code"));	            
+        		        }
+        	        rs.close ();
+        	        } catch(Exception exc) {
+        	        	exc.printStackTrace();
+        	        }
+        	        Random rand = new Random();
+        	        boolean available = false;
+        	        while(!available) {
+        	            outCode = Integer.toString(rand.nextInt(999));
+        	            available = true;
+        	            for(String item : codeList) {
+        	            	if(item.equals(outCode))
+        	            		available = false;
+        	            }
+        	        }
+        	        String codeLabel = "Party Code: " + outCode;
+        	        JLabel pCode = new JLabel(codeLabel, JLabel.CENTER);
+        			notifier.setText("Entered data.");
+
+        			
         		}else{
-        			System.out.println("Fill in all fields.");
-        			System.out.println(partyInput);
+        			notifier.setText("Fill in all fields.");
         		}
         	}
         });
@@ -196,10 +265,13 @@ public class AddNewParty extends JFrame {
         contentPane.add(pName);
         contentPane.add(chamb);
         contentPane.add(cong);
+        contentPane.add(memb);
         contentPane.add(pCode);
         contentPane.add(partyFill);
         contentPane.add(chamberDropdown);
-        contentPane.add(rollNumDropdown);
+        contentPane.add(congressFill);
+        contentPane.add(membersFill);
+        contentPane.add(notifier);
         contentPane.add(t1);
 
 
