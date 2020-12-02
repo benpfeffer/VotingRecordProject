@@ -18,24 +18,19 @@ import javax.swing.border.EmptyBorder;
 
 public class AddNewRollcall extends JFrame {
 	private JPanel contentPane;
-    private JTextField txtTypeYourQuestion;
-    private JTextField txtQuestionWeight;
-    private JTextField txtEnter;
-    private JTextField txtEnter_1;
-    private JTextField txtValue;
-    private JTextField txtValue_1;
-    //private final Action action = new SwingAction();
     public static String billInput = "None";
     public static String voteResInput = "None";
     public static String sessInput = "None";
     public static String clerkInput = "None";
     public static String vDescInput = "None";
+    public static String vQuestionInput = "None";
     public static String dDescInput = "None";
     public static String outCong = "None";
     public static String outChamb = "None";
-    public static String outRollNum = "None";
+    public static String outRollNum = "0";
     public static String outIcp = "None";
     public static String outCast = "None";
+    public static String dateInput = "None";
     
     public AddNewRollcall() {
         Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -90,7 +85,7 @@ public class AddNewRollcall extends JFrame {
           });
         
         JButton addRollcall=new JButton("Add New Rollcall");//creating instance of JButton  
-	       addRollcall.setBounds(40,340,290,100);//x axis, y axis, width, height 
+	    addRollcall.setBounds(40,340,290,100);//x axis, y axis, width, height 
         addRollcall.setFont(new Font("Sans-serif", Font.PLAIN, 28));
         addRollcall.setBackground(new Color(255, 235, 153));
         addRollcall.setOpaque(true);
@@ -160,29 +155,34 @@ public class AddNewRollcall extends JFrame {
         sess.setBackground(new Color(255, 255, 255));
 
         JLabel clerkNo = new JLabel("Clerk No.", JLabel.CENTER);
-        clerkNo.setBounds(655,410,100,50);
+        clerkNo.setBounds(655,410,100,40);
         clerkNo.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         clerkNo.setOpaque(true);
         clerkNo.setBackground(new Color(255, 255, 255));
 
         JLabel vDesc = new JLabel("Vote Desc", JLabel.CENTER);
-        vDesc.setBounds(400,455,100,50);
+        vDesc.setBounds(400,450,100,40);
         vDesc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         vDesc.setOpaque(true);
         vDesc.setBackground(new Color(255, 255, 255));
+        
+        JLabel vQuestion = new JLabel("Vote Question", JLabel.CENTER);
+        vQuestion.setBounds(380,485,150,40);
+        vQuestion.setFont(new Font("Sans-serif", Font.PLAIN, 18));
+        vQuestion.setOpaque(true);
+        vQuestion.setBackground(new Color(255, 255, 255));
 
         JLabel dDesc = new JLabel("Detailed Desc", JLabel.CENTER);
-        dDesc.setBounds(390,515,120,50);
+        dDesc.setBounds(390,530,120,40);
         dDesc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         dDesc.setOpaque(true);
         dDesc.setBackground(new Color(255, 255, 255));
 
-        JLabel rollNum = new JLabel("Roll Number: ######", JLabel.CENTER);
-        rollNum.setBounds(410,595,215,50);
-        rollNum.setFont(new Font("Sans-serif", Font.PLAIN, 18));
-        rollNum.setOpaque(true);
-        rollNum.setBackground(new Color(255, 255, 255));
-        rollNum.setBorder(blackline);
+        JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
+        notifier.setBounds(410,595,230,70);
+        notifier.setFont(new Font("Sans-serif", Font.PLAIN, 12));
+        notifier.setOpaque(true);
+        notifier.setBackground(new Color(255, 255, 255));
 
 
         JTextField billNo = new JTextField(20);
@@ -190,7 +190,6 @@ public class AddNewRollcall extends JFrame {
         billNo.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		billInput = billNo.getText();
-        		System.out.println(billInput);
         	}
         });
 
@@ -199,44 +198,14 @@ public class AddNewRollcall extends JFrame {
         voteRes.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		voteResInput = voteRes.getText();
-        		System.out.println(voteResInput);
         	}
         });
 
-        QueryDataEngine dataEngine = new QueryDataEngine();
-        FieldList congsFieldList = new FieldList();
-        congsFieldList.addField("chamber",  "\"Senate\"");
-        dataEngine.queryTable(congsFieldList, "HSall_parties", null);
-        ResultSet rs = dataEngine.getResultSet();
-        int count = 0;
-        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
-        congList[0]="None";
-        try {
-	        while (rs.next ())
-	        {
-	            String congVal = rs.getString ("congress");
-	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
-	            if(!contains) {
-	            	++count;
-	            	congList[count] = congVal;
-	            }
-	            
-	        }
-        rs.close ();
-        } catch(Exception exc) {
-        	exc.printStackTrace();
-        }
-        
-        String[] congresses = congList;
-        JComboBox congressDropdown = new JComboBox(congresses);
-        congressDropdown.setSelectedIndex(0);
-        congressDropdown.setBounds(550,275,290,50);
-        String selectedCongress = (String)congressDropdown.getSelectedItem();
-        congressDropdown.addActionListener(new ActionListener() {
+        JTextField congressFill = new JTextField(20);
+        congressFill.setBounds(550,280,290,30);
+        congressFill.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedCongress = (String)congressDropdown.getSelectedItem();
-        		outCong = selectedCongress;
-        		System.out.println(selectedCongress);
+        		outCong = congressFill.getText();
         	}
         });
 
@@ -250,7 +219,6 @@ public class AddNewRollcall extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		String selectedChamber = (String)chamberDropdown.getSelectedItem();
         		outChamb = selectedChamber;
-        		System.out.println(selectedChamber);
         	}
         });
 
@@ -274,7 +242,7 @@ public class AddNewRollcall extends JFrame {
         rollDate.addChangeListener(new javax.swing.event.ChangeListener() {
             @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                dDescInput = formatter.format(rollDate.getModel().getValue());
+                dateInput = formatter.format(rollDate.getModel().getValue());
             }
         });
 
@@ -283,7 +251,6 @@ public class AddNewRollcall extends JFrame {
         sessBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		sessInput = sessBlank.getText();
-        		System.out.println(sessInput);
         	}
         });
 
@@ -292,25 +259,30 @@ public class AddNewRollcall extends JFrame {
         clerkBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		clerkInput = clerkBlank.getText();
-        		System.out.println(clerkInput);
         	}
         });
 
         JTextField vDescBlank = new JTextField(100);
-        vDescBlank.setBounds(550,465,290,30);
+        vDescBlank.setBounds(550,455,290,30);
         vDescBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		vDescInput = vDescBlank.getText();
-        		System.out.println(vDescInput);
+        	}
+        });
+        
+        JTextField vQuestionBlank = new JTextField(100);
+        vQuestionBlank.setBounds(550,490,290,30);
+        vQuestionBlank.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		vQuestionInput = vQuestionBlank.getText();
         	}
         });
 
         JTextField dDescBlank = new JTextField(250);
-        dDescBlank.setBounds(550,510,290,75);
+        dDescBlank.setBounds(550,530,290,50);
         dDescBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		dDescInput = dDescBlank.getText();
-        		System.out.println(dDescInput);
         	}
         });
 
@@ -322,14 +294,21 @@ public class AddNewRollcall extends JFrame {
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		System.out.println(billNo.getText());
-        		if(outCong!="None" && outChamb!="None" && outRollNum!="None" && outIcp!="None" && outCast!="None"){
-        			System.out.println("Entered data.");
+        		if(billInput!="None" && voteResInput!="None" && sessInput!="None" && clerkInput!="None" && outCong!="None" && outChamb!="None"){
+        		    AddDataEngine dataEngine = new AddDataEngine();
+        		    
+        		    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        		    // Need to change this so that the roll number is determined by how many roll calls have already been called for this congress
+        		    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        		    outRollNum = "1";
+        		    		
+        			dataEngine.addRollcall(outCong, outChamb, outRollNum, dateInput, sessInput, clerkInput, billInput, voteResInput, vDescInput, vQuestionInput, dDescInput);
+        			notifier.setText("Entered data.");
         		}else{
-        			System.out.println("Fill in all fields.");
+        			notifier.setText("Fill in all fields.");
         		}
         	}
         });
-
 
         JLabel t1 = new JLabel();
         t1.setBounds(350,220,570,460);
@@ -339,6 +318,7 @@ public class AddNewRollcall extends JFrame {
         contentPane.add(billN);
         contentPane.add(voteR);
         contentPane.add(vDesc);
+        contentPane.add(vQuestion);
         contentPane.add(dDesc);
         contentPane.add(billNo);
         contentPane.add(clerkNo);
@@ -346,13 +326,14 @@ public class AddNewRollcall extends JFrame {
         contentPane.add(sessBlank);
         contentPane.add(clerkBlank);
         contentPane.add(vDescBlank);
+        contentPane.add(vQuestionBlank);
         contentPane.add(dDescBlank);
         contentPane.add(cong);
         contentPane.add(chamb);
         contentPane.add(date);
         contentPane.add(sess);
-        contentPane.add(rollNum);
-        contentPane.add(congressDropdown);
+        contentPane.add(notifier);
+        contentPane.add(congressFill);
         contentPane.add(chamberDropdown);
         contentPane.add(rollDate);
         contentPane.add(t1);

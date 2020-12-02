@@ -20,49 +20,46 @@ public class AddDataEngine {
         }
 	}
 	
-	public void addVote(int congress, String chamber, int rollnumber, int icpsr, int cast_code) {
+	public void addVote(String congress, String chamber, String rollnumber, String icpsr, String cast_code) {
 		try {
-		stmt.executeUpdate("insert into HSall_votes values(" + Integer.toString(congress) + ", " + chamber + ", " + Integer.toString(rollnumber) + ", " + Integer.toString(icpsr) + ", " + Integer.toString(cast_code) + ")");
+		stmt.executeUpdate("insert into HSall_votes values(" + congress + ", \"" + chamber + "\", " + rollnumber + ", " + icpsr + ", " + cast_code + ")");
 		} catch(SQLException e) {
 			System.err.println(e.getMessage());
 		}
 	}
 	
-	public void addRollcall(int congress, String chamber, int rollnumber, String date, int session, int clerk_rollnumber, String bill_number, String vote_result, String vote_desc, String vote_question, String dtl_desc) {
+	public void addRollcall(String congress, String chamber, String rollnumber, String date, String session, String clerk_rollnumber, String bill_number, String vote_result, String vote_desc, String vote_question, String dtl_desc) {
 		try {
-			stmt.executeUpdate("insert into HSall_rollcalls(chamber, rollnumber, date, session, clerk_rollnumber, bill_number, vote_result, vote_desc, vote_question, dtl_desc) values(" + 
-		Integer.toString(congress) + ", " + 
-		chamber + ", " + 
-		Integer.toString(rollnumber) + ", " + 
-		date + ", " +
-		Integer.toString(session) + ", " +
-		Integer.toString(clerk_rollnumber) + ", " +
-		bill_number + ", " + 
-		vote_result + ", " + 
-		vote_desc + ", " + 
-		vote_question + ", " + 
-		dtl_desc + ")");
+			stmt.executeUpdate("insert into HSall_rollcalls(congress, chamber, rollnumber, date, session, clerk_rollnumber, bill_number, vote_result, vote_desc, vote_question, dtl_desc) values(" + 
+		congress + ", \"" + 
+		chamber + "\", " + 
+		rollnumber + ", \"" + 
+		date + "\", " +
+		session + ", " +
+		clerk_rollnumber + ", \"" +
+		bill_number + "\", \"" + 
+		vote_result + "\", \"" + 
+		vote_desc + "\", \"" + 
+		vote_question + "\", \"" + 
+		dtl_desc + "\")");
 			} catch(SQLException e) {
 				System.err.println(e.getMessage());
 			}
 	}
 	
-	public void addMember(String congress, String chamber, int icpsr, int state_icpsr, int district_code, String state_abbrev, int party_code, int occupancy, int last_means, String bioname, String bioguide_id, int born, int died, int number_of_votes, int number_of_errors) {
+	public void addMember(String congress, String chamber, String icpsr, String state_icpsr, String district_code, String state_abbrev, String party_code, String bioname, String bioguide_id, String born) {
 		try {
-			stmt.executeUpdate("insert into HSall_members(congress, chamber, icpsr, state_icpsr, district_code, state_abbrev, party_code, occupancy, last_means, bioname, bioguide_id, born, died, number_of_votes, number_of_errors) values(" + 
-		congress + ", " + 
-		chamber + ", " + 
-		Integer.toString(icpsr) + ", " + 
-		Integer.toString(state_icpsr) + ", " + 
-		Integer.toString(district_code) + ", " + 
-		state_abbrev + ", " +
-		Integer.toString(party_code) + ", " +
-		Integer.toString(occupancy) + ", " +
-		Integer.toString(last_means) + ", " +
-		bioname + ", " + 
-		bioguide_id + ", " + 
-		Integer.toString(number_of_votes) + ", " + 
-		Integer.toString(number_of_errors) + ")");
+			stmt.executeUpdate("insert into HSall_members(congress, chamber, icpsr, state_icpsr, district_code, state_abbrev, party_code, bioname, bioguide_id, born) values(" + 
+		congress + ", \"" + 
+		chamber + "\", " + 
+		icpsr + ", " + 
+		state_icpsr + ", " + 
+		district_code + ", \"" + 
+		state_abbrev + "\", " +
+		party_code + ", \"" +
+		bioname + "\", " + 
+		bioguide_id + ", \"" +
+		born + "\")");
 			} catch(SQLException e) {
 				System.err.println(e.getMessage());
 			}

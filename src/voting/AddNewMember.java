@@ -15,21 +15,18 @@ import javax.swing.border.EmptyBorder;
 
 public class AddNewMember extends JFrame {
 	private JPanel contentPane;
-    private JTextField txtTypeYourQuestion;
-    private JTextField txtQuestionWeight;
-    private JTextField txtEnter;
-    private JTextField txtEnter_1;
-    private JTextField txtValue;
-    private JTextField txtValue_1;
     public static String nameInput = "None";
     public static String bdInput = "None";
     public static String bioGuideInput = "None";
     public static String icpInput = "None";
     public static String outCong = "None";
     public static String outChamb = "None";
-    public static String outRollNum = "None";
-    public static String outIcp = "None";
-    public static String outCast = "None";
+    public static String selectedDistrict = "None";    
+    public static String selectedState = "None";
+    public static String selectedStateIcp = "None";
+    public static String selectedParty = "None";
+
+
     
     public AddNewMember() {
         Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -120,7 +117,7 @@ public class AddNewMember extends JFrame {
         name.setOpaque(true);
         name.setBackground(new Color(255, 255, 255));
 
-        JLabel bd = new JLabel("Birthdate", JLabel.CENTER);
+        JLabel bd = new JLabel("Birth Year", JLabel.CENTER);
         bd.setBounds(400,295,100,30);
         bd.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         bd.setOpaque(true);
@@ -150,14 +147,14 @@ public class AddNewMember extends JFrame {
         cong.setOpaque(true);
         cong.setBackground(new Color(255, 255, 255));
 
-        JLabel party = new JLabel("Party", JLabel.CENTER);
+        JLabel party = new JLabel("Party ID", JLabel.CENTER);
         party.setBounds(400,455,100,30);
         party.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         party.setOpaque(true);
         party.setBackground(new Color(255, 255, 255));
 
-        JLabel bioGuide = new JLabel("Bio Guide", JLabel.CENTER);
-        bioGuide.setBounds(400,495,100,30);
+        JLabel bioGuide = new JLabel("Bio Guide ID", JLabel.CENTER);
+        bioGuide.setBounds(400,495,120,30);
         bioGuide.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         bioGuide.setOpaque(true);
         bioGuide.setBackground(new Color(255, 255, 255));
@@ -167,6 +164,12 @@ public class AddNewMember extends JFrame {
         icp.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         icp.setOpaque(true);
         icp.setBackground(new Color(255, 255, 255));
+        
+        JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
+        notifier.setBounds(410,595,230,70);
+        notifier.setFont(new Font("Sans-serif", Font.PLAIN, 12));
+        notifier.setOpaque(true);
+        notifier.setBackground(new Color(255, 255, 255));
 
 
         JTextField nameBlank = new JTextField(20);
@@ -196,19 +199,25 @@ public class AddNewMember extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		String selectedChamber = (String)chamberDropdown.getSelectedItem();
         		outChamb = selectedChamber;
-        		System.out.println(selectedChamber);
         	}
         });
 
         String[] states = { "None", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI","SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
+        String[] state_icpsr = { "None", "41", "81", "61", "42", "71", "62", "1", "11", "43", "44", "82", "63", "21", "22", "31", "32", "51", "45", "2", "52", "3", "23", "33", "46", "34", "64", "35", "65", "4", "12", "66", "13", "47", "36", "24", "53", "72", "14", "5","48", "37", "54", "49", "67", "6", "40", "73", "56", "25", "68"};
+
         JComboBox stateDropdown = new JComboBox(states);
         stateDropdown.setSelectedIndex(0);
         stateDropdown.setBounds(550,375,90,30);
-        String selectedState = (String)stateDropdown.getSelectedItem();
+        selectedState = (String)stateDropdown.getSelectedItem();
         stateDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedState = (String)stateDropdown.getSelectedItem();
-        		System.out.println(selectedState);
+        		selectedState = (String)stateDropdown.getSelectedItem();
+        		int i = 0;
+        		while(states[i] != selectedState) {
+        			i++;
+        		}
+    			selectedStateIcp = state_icpsr[i];
+        			
         	}
         });
 
@@ -219,60 +228,27 @@ public class AddNewMember extends JFrame {
         JComboBox districtDropdown = new JComboBox(districts);
         districtDropdown.setSelectedIndex(0);
         districtDropdown.setBounds(750,375,90,30);
-        String selectedDistrict = (String)districtDropdown.getSelectedItem();
+        selectedDistrict = (String)districtDropdown.getSelectedItem();
         districtDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedDistrict = (String)districtDropdown.getSelectedItem();
-        		System.out.println(selectedDistrict);
+        		selectedDistrict = (String)districtDropdown.getSelectedItem();
         	}
         });
 
-      //Congress Selector using query engine
-        QueryDataEngine dataEngine = new QueryDataEngine();
-        FieldList congsFieldList = new FieldList();
-        congsFieldList.addField("chamber",  "\"Senate\"");
-        dataEngine.queryTable(congsFieldList, "HSall_parties", null);
-        ResultSet rs = dataEngine.getResultSet();
-        int count = 0;
-        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
-        congList[0]="None";
-        try {
-	        while (rs.next ())
-	        {
-	            String congVal = rs.getString ("congress");
-	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
-	            if(!contains) {
-	            	++count;
-	            	congList[count] = congVal;
-	            }
-	            
-	        }
-        rs.close ();
-        } catch(Exception exc) {
-        	exc.printStackTrace();
-        }
-        
-        String[] congs = congList;
-        JComboBox congDropdown = new JComboBox(congs);
-        congDropdown.setSelectedIndex(0);
-        congDropdown.setBounds(550,415,290,30);
-        String selectedCongs = (String)congDropdown.getSelectedItem();
-        congDropdown.addActionListener(new ActionListener() {
+        //Congress Selector
+        JTextField congressFill = new JTextField(20);
+        congressFill.setBounds(550,415,290,30);
+        congressFill.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedCong = (String)congDropdown.getSelectedItem();
-        		System.out.println(selectedCong);
+        		outCong = congressFill.getText();
         	}
         });
 
-        String[] parties = { "None", "Dem", "Rep", "Ind", "Green", "Libertarian" };
-        JComboBox partyDropdown = new JComboBox(parties);
-        partyDropdown.setSelectedIndex(0);
-        partyDropdown.setBounds(550,455,290,30);
-        String selectedParty = (String)partyDropdown.getSelectedItem();
-        partyDropdown.addActionListener(new ActionListener() {
+        JTextField partyFill = new JTextField(20);
+        partyFill.setBounds(550,455,290,30);
+        partyFill.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedParty = (String)partyDropdown.getSelectedItem();
-        		System.out.println(selectedParty);
+        		selectedParty = partyFill.getText();
         	}
         });
 
@@ -281,7 +257,6 @@ public class AddNewMember extends JFrame {
         bioGuideBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		bioGuideInput = bioGuideBlank.getText();
-        		System.out.println(bioGuideInput);
         	}
         });
 
@@ -290,7 +265,6 @@ public class AddNewMember extends JFrame {
         icpBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		icpInput = icpBlank.getText();
-        		System.out.println(icpInput);
         	}
         });
 
@@ -300,10 +274,13 @@ public class AddNewMember extends JFrame {
         contentPane.add(enterDataOne);
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if(outCong!="None" && outChamb!="None" && outRollNum!="None" && outIcp!="None" && outCast!="None"){
-        			System.out.println("Entered data.");
+        		if(nameInput!="None" && bdInput!="None" && bioGuideInput!="None" && outCong!="None" && outChamb!="None" && icpInput!="None"){
+        			//Add the data to the database using SQL
+        			AddDataEngine dataEngine = new AddDataEngine();
+        			dataEngine.addMember(outCong, outChamb, icpInput, selectedStateIcp, selectedDistrict, selectedState, selectedParty, nameInput, bioGuideInput,  bdInput);
+        			notifier.setText("Entered data.");
         		}else{
-        			System.out.println("Fill in all fields.");
+        			notifier.setText("Fill in all fields.");
         		}
         	}
         });
@@ -330,8 +307,9 @@ public class AddNewMember extends JFrame {
         contentPane.add(chamberDropdown);
         contentPane.add(stateDropdown);
         contentPane.add(districtDropdown);
-        contentPane.add(congDropdown);
-        contentPane.add(partyDropdown);
+        contentPane.add(congressFill);
+        contentPane.add(partyFill);
+        contentPane.add(notifier);
         contentPane.add(t1);
 
 

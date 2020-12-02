@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -146,47 +148,17 @@ public class AddNewVote extends JFrame {
         cast.setOpaque(true);
         cast.setBackground(new Color(255, 255, 255));
 
-        JLabel voteNum = new JLabel("Vote Number: ######", JLabel.CENTER);
-        voteNum.setBounds(410,595,215,50);
-        voteNum.setFont(new Font("Sans-serif", Font.PLAIN, 18));
-        voteNum.setOpaque(true);
-        voteNum.setBackground(new Color(255, 255, 255));
-        voteNum.setBorder(blackline);
+        JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
+        notifier.setBounds(410,595,230,70);
+        notifier.setFont(new Font("Sans-serif", Font.PLAIN, 12));
+        notifier.setOpaque(true);
+        notifier.setBackground(new Color(255, 255, 255));
 
-        QueryDataEngine dataEngine = new QueryDataEngine();
-        FieldList congsFieldList = new FieldList();
-        congsFieldList.addField("chamber",  "\"Senate\"");
-        dataEngine.queryTable(congsFieldList, "HSall_parties", null);
-        ResultSet rs = dataEngine.getResultSet();
-        int count = 0;
-        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
-        congList[0]="None";
-        try {
-	        while (rs.next ())
-	        {
-	            String congVal = rs.getString ("congress");
-	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
-	            if(!contains) {
-	            	++count;
-	            	congList[count] = congVal;
-	            }
-	            
-	        }
-        rs.close ();
-        } catch(Exception exc) {
-        	exc.printStackTrace();
-        }
-        
-        String[] congresses = congList;
-        JComboBox congressDropdown = new JComboBox(congresses);
-        congressDropdown.setSelectedIndex(0);
-        congressDropdown.setBounds(550,275,290,50);
-        String selectedCongress = (String)congressDropdown.getSelectedItem();
-        congressDropdown.addActionListener(new ActionListener() {
+        JTextField congressFill = new JTextField(20);
+        congressFill.setBounds(550,275,290,50);
+        congressFill.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String selectedCongress = (String)congressDropdown.getSelectedItem();
-        		outCong = selectedCongress;
-        		System.out.println(selectedCongress);
+        		outCong = congressFill.getText();
         	}
         });
 
@@ -200,7 +172,6 @@ public class AddNewVote extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		String selectedChamber = (String)chamberDropdown.getSelectedItem();
         		outChamb = selectedChamber;
-        		System.out.println(selectedChamber);
         	}
         });
 
@@ -212,7 +183,6 @@ public class AddNewVote extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		String selectedRollNum = (String)rollNumDropdown.getText();
         		outRollNum = selectedRollNum;
-        		System.out.println(selectedRollNum);
         	}
         });
 
@@ -223,7 +193,6 @@ public class AddNewVote extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		String selectedIcp = (String)icpDropdown.getText();
         		outIcp = selectedIcp;
-        		System.out.println(selectedIcp);
         	}
         });
 
@@ -236,7 +205,6 @@ public class AddNewVote extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		String selectedCastCode = (String)castCodeDropdown.getSelectedItem();
         		outCast = selectedCastCode;
-        		System.out.println(selectedCastCode);
         	}
         });
 
@@ -247,9 +215,12 @@ public class AddNewVote extends JFrame {
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		if(outCong!="None" && outChamb!="None" && outRollNum!="None" && outIcp!="None" && outCast!="None"){
-        			System.out.println("Entered data.");
+        			//Add the data to the database using SQL
+        			AddDataEngine dataEngine = new AddDataEngine();
+        			dataEngine.addVote(outCong, outChamb, outRollNum, outIcp, outCast);
+        			notifier.setText("Entered data.");
         		}else{
-        			System.out.println("Fill in all fields.");
+        			notifier.setText("Fill in all fields.");
         		}
         	}
         });
@@ -265,8 +236,8 @@ public class AddNewVote extends JFrame {
         contentPane.add(rNum);
         contentPane.add(icp);
         contentPane.add(cast);
-        contentPane.add(voteNum);
-        contentPane.add(congressDropdown);
+        contentPane.add(notifier);
+        contentPane.add(congressFill);
         contentPane.add(chamberDropdown);
         contentPane.add(rollNumDropdown);
         contentPane.add(icpDropdown);
