@@ -13,7 +13,6 @@ public class FieldList {
 	
 	public void addField(String field, String value) {
 		fields.add(field);
-		//value = "\""+value+"\"";
 		values.add(value);
 	}
 	

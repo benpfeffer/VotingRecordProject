@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class MainMenu extends JFrame {
-	private JPanel contentPane;
 	
 	public MainMenu(){
 		

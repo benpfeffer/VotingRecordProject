@@ -2,19 +2,15 @@ package voting;
 
 import javax.swing.*;  
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
 import java.util.Map;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 import java.sql.*;
-import java.util.Vector;
 import javax.swing.JScrollPane;
 import java.awt.Component;
 
@@ -148,7 +144,7 @@ public class BasicSearch extends JFrame {
         enterDataOne.setBounds(10,560,150,100);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(enterDataOne);
-        JFrame currFrame = (JFrame) SwingUtilities.windowForComponent(contentPane);
+        
         
         //Execute SQL query when the search button is pressed
         enterDataOne.addActionListener(new ActionListener() {

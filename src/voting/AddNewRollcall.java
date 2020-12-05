@@ -2,18 +2,12 @@ package voting;
 
 import javax.swing.*;  
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 public class AddNewRollcall extends JFrame {
@@ -30,10 +24,11 @@ public class AddNewRollcall extends JFrame {
     public static String outRollNum = "0";
     public static String outIcp = "None";
     public static String outCast = "None";
-    public static String dateInput = "None";
+    public static String dateInput = "2017-08-03";
+    public static int count = 0;
+
     
     public AddNewRollcall() {
-        Border blackline = BorderFactory.createLineBorder(Color.black);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
         contentPane = new JPanel();
@@ -297,11 +292,13 @@ public class AddNewRollcall extends JFrame {
         		if(billInput!="None" && voteResInput!="None" && sessInput!="None" && clerkInput!="None" && outCong!="None" && outChamb!="None"){
         		    AddDataEngine dataEngine = new AddDataEngine();
         		    
-        		    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        		    // Need to change this so that the roll number is determined by how many roll calls have already been called for this congress
-        		    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        		    outRollNum = "1";
-        		    		
+        		    
+        		    //query data of same congress and chamber
+        		    QueryDataEngine dataQuery = new QueryDataEngine();
+        		    int count = dataQuery.queryCount(outCong,  outChamb);
+        		    int oRN = count+1;
+        		    outRollNum = String.valueOf(oRN);
+        		    	
         			dataEngine.addRollcall(outCong, outChamb, outRollNum, dateInput, sessInput, clerkInput, billInput, voteResInput, vDescInput, vQuestionInput, dDescInput);
         			notifier.setText("Entered data.");
         		}else{

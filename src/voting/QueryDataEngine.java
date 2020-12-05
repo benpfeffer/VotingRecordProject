@@ -1,7 +1,6 @@
 package voting;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class QueryDataEngine {
 	private Connection connection;
@@ -10,10 +9,12 @@ public class QueryDataEngine {
 	public QueryDataEngine() {
 		try
         {
-          // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\salba\\Documents\\CIS452 Databases\\VotingRecordProject\\voting.db");
-          stmt = connection.createStatement();
-          System.out.println("Connection successful");
+			// create a database connection
+			String partialPath = System.getProperty("user.dir");
+			String connPath = "jdbc:sqlite:" + partialPath + "/voting/voting.db";
+			connection = DriverManager.getConnection(connPath);
+			stmt = connection.createStatement();
+			System.out.println("Connection successful");
         }
         catch(SQLException e)
         {
@@ -94,9 +95,9 @@ public class QueryDataEngine {
 			for(int i = 0; i < fieldList.size(); i++) {
 				if(i > 0) queryText = queryText + " and ";
 				if(fieldList.fields.get(i).equals("startDate"))
-					queryText = queryText + "date" + ">" + fieldList.values.get(i);
+					queryText = queryText + "date" + ">=" + "\"" + fieldList.values.get(i) + "\"";
 				else if(fieldList.fields.get(i).equals("endDate"))
-					queryText = queryText + "date" + "<" + fieldList.values.get(i);
+					queryText = queryText + "date" + "<=" + "\"" + fieldList.values.get(i) + "\"";
 				else
 					queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
 				System.out.println(queryText);
@@ -118,198 +119,22 @@ public class QueryDataEngine {
 			System.err.println(e.getMessage());
 		}
 	}
-	/*
-	public void queryVote(FieldList fieldList) {
+	
+	public int queryCount(String congress, String chamber) {
 		try {
-			String queryText = "select * from HSall_votes where ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
+			String queryText = "SELECT COUNT(*) AS rowcount FROM HSall_rollcalls where congress = "
+      	          + congress + " and chamber = " + "\"" + chamber + "\"";
 			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
+			rs.next();
+    		int count = rs.getInt("rowcount");
+    	    rs.close();
+    	    return(count);
+		} catch(SQLException e) {
 			System.err.println(e.getMessage());
+			return(-1);
 		}
 	}
 	
-	public void queryRollcall(FieldList fieldList) {
-		try {
-			String queryText = "select * from HSall_rollcalls where ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void queryMember(FieldList fieldList) {
-		try {
-			String queryText = "select * from HSall_members where ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void queryParty(FieldList fieldList) {
-		try {
-			String queryText = "select * from HSall_parties where ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	
-	///////Adding 2 table connections
-	public void queryMemberXParty(FieldList fieldList, String tableOne, String tableTwo) {
-		try {
-			String queryText = "select * from HSall_"+tableOne+" m, HSall_"+tableTwo+" p where m.party_code = p.party_code and m.chamber = p.chamber and m.congress = p.congress and ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + "m.";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void queryMemberXRollcall(FieldList fieldList, String tableOne, String tableTwo) {
-		try {
-			String queryText = "select * from HSall_"+tableOne+" m, HSall_"+tableTwo+" r where m.congress = r.congress and m.chamber = r.chamber and ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + "m.";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void queryMemberXVote(FieldList fieldList, String tableOne, String tableTwo) {
-		try {
-			String queryText = "select * from HSall_"+tableOne+" m, HSall_"+tableTwo+" v where m.congress = v.congress and m.chamber = v.chamber and m.icpsr = v.icpsr and ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + "m.";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void queryPartyXRollcall(FieldList fieldList, String tableOne, String tableTwo) {
-		try {
-			String queryText = "select * from HSall_"+tableOne+" m, HSall_"+tableTwo+" v where m.congress = v.congress and m.chamber = v.chamber and ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + "m.";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void queryPartyXVote(FieldList fieldList, String tableOne, String tableTwo) {
-		try {
-			String queryText = "select * from HSall_"+tableOne+" m, HSall_"+tableTwo+" v where m.congress = v.congress and m.chamber = v.chamber and ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + "m.";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void queryRollcallXVote(FieldList fieldList, String tableOne, String tableTwo) {
-		try {
-			String queryText = "select * from HSall_"+tableOne+" m, HSall_"+tableTwo+" v where m.congress = v.congress and m.chamber = v.chamber and m.rollnumber = v.rollnumber and ";
-			String op = "=";
-			for(int i = 0; i < fieldList.size(); i++) {
-				if(i > 0) queryText = queryText + " and ";
-				queryText = queryText + "m.";
-				queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
-			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
-		}
-		catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	/////////////end 2 table connections
-	
-	*/
 	public ResultSet getResultSet() {
 		return rs;
 	}

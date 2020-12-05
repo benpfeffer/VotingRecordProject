@@ -2,27 +2,13 @@ package voting;
 
 import javax.swing.*;  
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 public class AddNewVote extends JFrame {
 	private JPanel contentPane;
-    private JTextField txtTypeYourQuestion;
-    private JTextField txtQuestionWeight;
-    private JTextField txtEnter;
-    private JTextField txtEnter_1;
-    private JTextField txtValue;
-    private JTextField txtValue_1;
     //private final Action action = new SwingAction();
     public static String outCong = "None";
     public static String outChamb = "None";
@@ -31,7 +17,6 @@ public class AddNewVote extends JFrame {
     public static String outCast = "None";
     
     public AddNewVote() {
-        Border blackline = BorderFactory.createLineBorder(Color.black);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
         contentPane = new JPanel();

@@ -2,15 +2,9 @@ package voting;
 
 import javax.swing.*;  
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.util.Arrays;
 import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 public class AddNewMember extends JFrame {
@@ -29,7 +23,6 @@ public class AddNewMember extends JFrame {
 
     
     public AddNewMember() {
-        Border blackline = BorderFactory.createLineBorder(Color.black);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
         contentPane = new JPanel();

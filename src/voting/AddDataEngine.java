@@ -2,6 +2,7 @@ package voting;
 
 import java.sql.*;
 
+
 public class AddDataEngine {
 	
 	private Connection connection;
@@ -10,7 +11,9 @@ public class AddDataEngine {
 		try
         {
           // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\salba\\Documents\\CIS452 Databases\\VotingRecordProject\\voting.db");
+		  String partialPath = System.getProperty("user.dir");
+		  String connPath = "jdbc:sqlite:" + partialPath + "/voting/voting.db";
+          connection = DriverManager.getConnection(connPath);
           stmt = connection.createStatement();
           System.out.println("Connection successful");
         }
@@ -57,8 +60,8 @@ public class AddDataEngine {
 		district_code + ", \"" + 
 		state_abbrev + "\", " +
 		party_code + ", \"" +
-		bioname + "\", " + 
-		bioguide_id + ", \"" +
+		bioname + "\", \"" + 
+		bioguide_id + "\", \"" +
 		born + "\")");
 			} catch(SQLException e) {
 				System.err.println(e.getMessage());

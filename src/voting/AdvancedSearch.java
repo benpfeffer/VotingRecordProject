@@ -20,12 +20,6 @@ import java.text.SimpleDateFormat;
 
 public class AdvancedSearch extends JFrame {
 	private JPanel contentPane;
-    private JTextField txtTypeYourQuestion;
-    private JTextField txtQuestionWeight;
-    private JTextField txtEnter;
-    private JTextField txtEnter_1;
-    private JTextField txtValue;
-    private JTextField txtValue_1;
     public static String startDate = "None";
     public static String endDate = "None";
     public static String fillInInput = "None";
@@ -236,7 +230,7 @@ public class AdvancedSearch extends JFrame {
         dataEngine.queryTable(congsFieldList, "HSall_parties", null);
         ResultSet rs = dataEngine.getResultSet();
         int count = 0;
-        String[] congList = new String[116];//length should be number of congresses +1 (for "None")
+        String[] congList = new String[118];//length should be number of congresses +1 (for "None")
         congList[0]="None";
         try {
 	        while (rs.next ())

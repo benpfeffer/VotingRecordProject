@@ -2,14 +2,10 @@ package voting;
 
 import javax.swing.*;  
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.util.Arrays;
 import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.util.ArrayList;
@@ -55,6 +51,12 @@ public class AddNewParty extends JFrame {
   	    title.setBackground(new Color(255, 255, 255));
         contentPane.add(title);
 
+        
+        JLabel t1 = new JLabel();//
+        t1.setBounds(350,220,570,460);
+        t1.setFont(new Font("Sans-serif", Font.PLAIN, 24));
+        t1.setOpaque(true);
+        t1.setBackground(new Color(255, 255, 255));
 
         JLabel t = new JLabel("Select an option to begin entering data", JLabel.CENTER);
         t.setBounds(350,220,570,460);
@@ -141,7 +143,6 @@ public class AddNewParty extends JFrame {
         QueryDataEngine queryEngine = new QueryDataEngine();
         queryEngine.queryAll("HSall_parties");
         ResultSet rs = queryEngine.getResultSet();
-        int count = 0;
         ArrayList<String> codeList = new ArrayList<String>();
         try {
 	        while (rs.next ())
@@ -204,7 +205,7 @@ public class AddNewParty extends JFrame {
         membersFill.setBounds(550,465,290,50);
         membersFill.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		members = congressFill.getText();
+        		members = membersFill.getText();
         	}
         });
 
@@ -224,7 +225,6 @@ public class AddNewParty extends JFrame {
         	        QueryDataEngine queryEngine = new QueryDataEngine();
         	        queryEngine.queryAll("HSall_parties");
         	        ResultSet rs = queryEngine.getResultSet();
-        	        int count = 0;
         	        ArrayList<String> codeList = new ArrayList<String>();
         	        try {
         		        while (rs.next ())
@@ -245,10 +245,10 @@ public class AddNewParty extends JFrame {
         	            		available = false;
         	            }
         	        }
-        	        String codeLabel = "Party Code: " + outCode;
-        	        JLabel pCode = new JLabel(codeLabel, JLabel.CENTER);
+        	        
         			notifier.setText("Entered data.");
-
+        	        String codeLabel = "Party Code: " + outCode;
+        	        pCode.setText(codeLabel);
         			
         		}else{
         			notifier.setText("Fill in all fields.");
@@ -256,12 +256,6 @@ public class AddNewParty extends JFrame {
         	}
         });
 
-
-        JLabel t1 = new JLabel();
-        t1.setBounds(350,220,570,460);
-        t1.setFont(new Font("Sans-serif", Font.PLAIN, 24));
-        t1.setOpaque(true);
-        t1.setBackground(new Color(255, 255, 255));
         contentPane.add(pName);
         contentPane.add(chamb);
         contentPane.add(cong);
