@@ -94,10 +94,16 @@ public class AdvancedSearch extends JFrame {
         contentPane.add(aSearch);
         
         //Label to Select which variable to search
-        JLabel ssc = new JLabel("Select Search Criteria", JLabel.CENTER);
+        JLabel ssc = new JLabel("Select Filter Criteria", JLabel.CENTER);
         ssc.setBounds(175,275,200,50);
         ssc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         ssc.setOpaque(true);
+        
+      //Label to Select which variable to search
+        JLabel tblLabel = new JLabel("Select Table", JLabel.CENTER);
+        tblLabel.setBounds(575,275,120,50);
+        tblLabel.setFont(new Font("Sans-serif", Font.PLAIN, 18));
+        tblLabel.setOpaque(true);
         
         //Label for variable search input
         JLabel fillLabel = new JLabel("Search on value :", JLabel.CENTER);
@@ -119,7 +125,7 @@ public class AdvancedSearch extends JFrame {
 
         //Label for Chamber selector
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
-        chamb.setBounds(560,375,125,50);
+        chamb.setBounds(575,375,125,50);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
 
@@ -144,7 +150,7 @@ public class AdvancedSearch extends JFrame {
         		};
         JComboBox sscDropdown = new JComboBox(sscs);
         sscDropdown.setSelectedIndex(0);
-        sscDropdown.setBounds(400,275,200,50);
+        sscDropdown.setBounds(400,275,165,50);
         sscDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		selectedSsc = (String)sscDropdown.getSelectedItem();
@@ -155,7 +161,7 @@ public class AdvancedSearch extends JFrame {
         String[] tbls = { "None", "Members", "Votes", "Rollcalls", "Parties"};
         JComboBox tblDropdown = new JComboBox(tbls);
         tblDropdown.setSelectedIndex(0);
-        tblDropdown.setBounds(700,275,200,50);
+        tblDropdown.setBounds(700,275,165,50);
         tblDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		selectedTbl = (String)tblDropdown.getSelectedItem();
@@ -264,46 +270,58 @@ public class AdvancedSearch extends JFrame {
         //Create query from currently selected attributes
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if(selectedSsc != "None"){
-        			String[] tokens = selectedSsc.split(" ", -1);
-        			String method = tokens[0];
-        			String field1 = tokens[2].substring(0);
-        			fillInInput = fillInInput.replace("\"", "");
-        			
-        			//Create the list of fields that the query will use
+        		if(selectedSsc != "None" || (selectedTbl != "None" && outChamb != "None")){
         			FieldList fieldList = new FieldList();
-        			if(field1 != "None")
-        				fieldList.addField(field1, fillInInput);
+        			//Create the list of fields that the query will use
         			if(outChamb != "None")
         				fieldList.addField("chamber", outChamb);
         			if(outCong != "None")
         				fieldList.addField("congress", outCong);
-        			//MUST ADD ROLLCALL TABLE
+
         			fieldList.addField("startDate", startDate);
         			fieldList.addField("endDate", endDate);
         			
         			String tbl = null;
-        			if(selectedTbl != "None" && !method.equalsIgnoreCase(selectedTbl)) {
-        				if(selectedTbl == "Members")
-        					tbl = "HSall_members";
-        				if(selectedTbl == "Parties")
-        					tbl = "HSall_parties";
-        				if(selectedTbl == "Rollcall")
-        					tbl = "HSall_rollcalls";
-        				if(selectedTbl == "Votes")
-        					tbl = "HSall_votes";
-        			}
+        			if(selectedSsc != "None") {
+        				String[] tokens = selectedSsc.split(" ", -1);
+	        			String method = tokens[0];
+	        			String field1 = tokens[2].substring(0);
+	        			fillInInput = fillInInput.replace("\"", "");
+	        			
+	        			if(!method.equals(selectedTbl)) {
+		        			if(field1 != "None")
+		        				fieldList.addField(field1, fillInInput);
+	        				if(selectedTbl == "Members")
+	        					tbl = "HSall_members";
+	        				if(selectedTbl == "Parties")
+	        					tbl = "HSall_parties";
+	        				if(selectedTbl == "Rollcall")
+	        					tbl = "HSall_rollcalls";
+	        				if(selectedTbl == "Votes")
+	        					tbl = "HSall_votes";
+	        			}
+        				//Select which method to use and obtain results
+            			if(method.equalsIgnoreCase("Members")) {
+            				dataEngine.queryTable(fieldList, "HSall_members", tbl);
+            			} else if(method.equalsIgnoreCase("Parties")) {
+            				dataEngine.queryTable(fieldList, "HSall_parties", tbl);
+            			} else if(method.equalsIgnoreCase("Rollcalls")) {
+            				dataEngine.queryTable(fieldList, "HSall_rollcalls", tbl);
+            			} else if(method.equalsIgnoreCase("Votes")) {
+            				dataEngine.queryTable(fieldList, "HSall_votes", tbl);
+            			} 
+        			} else {
+        				if(selectedTbl.equalsIgnoreCase("Members")) {
+            				dataEngine.queryTable(fieldList, "HSall_members", tbl);
+            			} else if(selectedTbl.equalsIgnoreCase("Parties")) {
+            				dataEngine.queryTable(fieldList, "HSall_parties", tbl);
+            			} else if(selectedTbl.equalsIgnoreCase("Rollcalls")) {
+            				dataEngine.queryTable(fieldList, "HSall_rollcalls", tbl);
+            			} else if(selectedTbl.equalsIgnoreCase("Votes")) {
+            				dataEngine.queryTable(fieldList, "HSall_votes", tbl);
+            			} 
+        			}	
         			
-        			//Select which method to use and obtain results
-        			if(method.equalsIgnoreCase("Members")) {
-        				dataEngine.queryTable(fieldList, "HSall_members", tbl);
-        			} else if(method.equalsIgnoreCase("Parties")) {
-        				dataEngine.queryTable(fieldList, "HSall_parties", tbl);
-        			} else if(method.equalsIgnoreCase("Rollcalls")) {
-        				dataEngine.queryTable(fieldList, "HSall_rollcalls", tbl);
-        			} else if(method.equalsIgnoreCase("Votes")) {
-        				dataEngine.queryTable(fieldList, "HSall_votes", tbl);
-        			} 
         			ResultSet rs = dataEngine.getResultSet();
         			
         			//Display the results
@@ -322,17 +340,18 @@ public class AdvancedSearch extends JFrame {
         		        contentPane.add(pane, BorderLayout.CENTER);
         		        contentPane.revalidate();
         		        contentPane.repaint();
-    				}catch(Exception ex) {
+    				} catch(Exception ex) {
     					endList.setText("<html>Invalid search value for the selected variable. Please try again.</html>");
     				}
         		} else {
-        			endList.setText("<html>Please fill in the search field.</html>");
+        			endList.setText("<html>Please either fill in the search field, or both the <br> table and congress fields.</html>");
         		}
         	}
         });
 
         //Display everything on the GUI
         contentPane.add(ssc);
+        contentPane.add(tblLabel);
         contentPane.add(fillLabel);
         contentPane.add(dRange);
         contentPane.add(chamb);

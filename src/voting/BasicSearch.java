@@ -82,7 +82,6 @@ public class BasicSearch extends JFrame {
         		AdvancedSearch advancedSearch = new AdvancedSearch();
         		advancedSearch.setVisible(true);
         		f1.dispose();
-        		System.out.println("Advanced search");
         	}
         });
 		
