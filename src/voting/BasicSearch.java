@@ -91,7 +91,7 @@ public class BasicSearch extends JFrame {
         });
 		
         //Label for button to select query     
-        JLabel ssc = new JLabel("Select Search Criteria", JLabel.CENTER);
+        JLabel ssc = new JLabel("Select Filter Criteria", JLabel.CENTER);
         ssc.setBounds(150,280,290,50);
         ssc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         ssc.setOpaque(true);

@@ -116,10 +116,16 @@ public class AdvancedSearch extends JFrame {
         fillLabel.setOpaque(true);
         
         //Label for date selector
-        JLabel dRange = new JLabel("Date (YYYY-MM-DD)", JLabel.CENTER);
-        dRange.setBounds(175,450,250,50);
+        JLabel dRange = new JLabel("Date Range (YYYY-MM-DD)   Start", JLabel.CENTER);
+        dRange.setBounds(175,450,300,50);
         dRange.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         dRange.setOpaque(true);
+        
+        //Label for date selector end
+        JLabel dRange2 = new JLabel("End", JLabel.CENTER);
+        dRange2.setBounds(650,450,50,50);
+        dRange2.setFont(new Font("Sans-serif", Font.PLAIN, 18));
+        dRange2.setOpaque(true);
 
         //Label for Congress selector
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
@@ -200,7 +206,7 @@ public class AdvancedSearch extends JFrame {
         SpinnerDateModel modelStart = new SpinnerDateModel(earliestDate, earliestDate, latestDate, Calendar.DAY_OF_MONTH);
         JSpinner dRangeStart = new JSpinner(modelStart);
         dRangeStart.setEditor(new JSpinner.DateEditor(dRangeStart, "yyyy/mm/dd"));           
-        dRangeStart.setBounds(500,450,200,50);
+        dRangeStart.setBounds(480,450,150,50);
         dRangeStart.addChangeListener(new javax.swing.event.ChangeListener() {
             @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -212,7 +218,7 @@ public class AdvancedSearch extends JFrame {
         SpinnerDateModel modelEnd = new SpinnerDateModel(latestDate, earliestDate, latestDate, Calendar.DAY_OF_MONTH);
         JSpinner dRangeEnd = new JSpinner(modelEnd);
         dRangeEnd.setEditor(new JSpinner.DateEditor(dRangeEnd, "yyyy/mm/dd"));           
-        dRangeEnd.setBounds(700,450,200,50);
+        dRangeEnd.setBounds(700,450,150,50);
         dRangeEnd.addChangeListener(new javax.swing.event.ChangeListener() {
             @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -358,6 +364,7 @@ public class AdvancedSearch extends JFrame {
         contentPane.add(tblLabel);
         contentPane.add(fillLabel);
         contentPane.add(dRange);
+        contentPane.add(dRange2);
         contentPane.add(chamb);
         contentPane.add(cong);
         contentPane.add(dRangeStart);
