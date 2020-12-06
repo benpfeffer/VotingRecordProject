@@ -275,7 +275,7 @@ public class AdvancedSearch extends JFrame {
         			if(field1 != "None")
         				fieldList.addField(field1, fillInInput);
         			if(outChamb != "None")
-        				fieldList.addField("chamber", "\"" + outChamb + "\"");
+        				fieldList.addField("chamber", outChamb);
         			if(outCong != "None")
         				fieldList.addField("congress", outCong);
         			//MUST ADD ROLLCALL TABLE
