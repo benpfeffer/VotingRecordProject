@@ -1,3 +1,8 @@
+/*
+ * This class displays the Add New Party section and allows for user input in the GUI.
+ * 
+ */
+
 package voting;
 
 import javax.swing.*;  
@@ -13,7 +18,6 @@ import java.util.Random;
 
 public class AddNewParty extends JFrame {
 	private JPanel contentPane;
-
     public static String partyInput = "None";
     public static String outChamb = "None";
     public static String outCongress = "None";
@@ -22,6 +26,7 @@ public class AddNewParty extends JFrame {
 
 
     public AddNewParty() {
+    	//Set up the outline of the GUI
         Border blackline = BorderFactory.createLineBorder(Color.black);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
@@ -51,13 +56,14 @@ public class AddNewParty extends JFrame {
   	    title.setBackground(new Color(255, 255, 255));
         contentPane.add(title);
 
-        
-        JLabel t1 = new JLabel();//
+        //Initialize default pane to use later
+        JLabel t1 = new JLabel();
         t1.setBounds(350,220,570,460);
         t1.setFont(new Font("Sans-serif", Font.PLAIN, 24));
         t1.setOpaque(true);
         t1.setBackground(new Color(255, 255, 255));
 
+        //Add default pane
         JLabel t = new JLabel("Select an option to begin entering data", JLabel.CENTER);
         t.setBounds(350,220,570,460);
   		t.setFont(new Font("Sans-serif", Font.PLAIN, 24));
@@ -65,6 +71,7 @@ public class AddNewParty extends JFrame {
         t.setBackground(new Color(255, 255, 255));
         contentPane.add(t);
 
+        //Add Add New Vote button to switch to the Add New Vote pane
         JButton addVote=new JButton("Add New Vote");//creating instance of JButton  
 	       addVote.setBounds(40,220,290,100);//x axis, y axis, width, height 
         addVote.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -77,6 +84,7 @@ public class AddNewParty extends JFrame {
               f1.dispose();        }
           });
 
+        //Add Add New Rollcall button to switch to the Add New Rollcall pane
         JButton addRollcall=new JButton("Add New Rollcall");//creating instance of JButton  
         addRollcall.setBounds(40,340,290,100);//x axis, y axis, width, height 
         addRollcall.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -89,6 +97,7 @@ public class AddNewParty extends JFrame {
         		f1.dispose();        	}
         });
 
+        //Add Add New Member button to switch to the Add New Member pane
         JButton addMember=new JButton("Add New Member");//creating instance of JButton  
         addMember.setBounds(40,460,290,100);//x axis, y axis, width, height 
         addMember.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -101,6 +110,7 @@ public class AddNewParty extends JFrame {
         		f1.dispose();        	}
         });
 
+        //Add Add New Party button for looks only
         JButton addParty=new JButton("Add New Party");//creating instance of JButton  
         addParty.setBounds(40,580,290,100);//x axis, y axis, width, height 
         addParty.setFont(new Font("Sans-serif", Font.PLAIN, 28));
@@ -109,37 +119,43 @@ public class AddNewParty extends JFrame {
         addParty.setBorderPainted(false);
         contentPane.add(addParty);
 
+        //Add input labels
+        //Party Name
         JLabel pName = new JLabel("Party Name", JLabel.CENTER);
         pName.setBounds(400,275,100,50);
         pName.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         pName.setOpaque(true);
         pName.setBackground(new Color(255, 255, 255));
 
+        //Chamber
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
         chamb.setBounds(400,345,100,50);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
         chamb.setBackground(new Color(255, 255, 255));
 
+        //Congress
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
         cong.setBounds(375,405,150,50);
         cong.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cong.setOpaque(true);
         cong.setBackground(new Color(255, 255, 255));
         
+        //Number of members
         JLabel memb = new JLabel("No. of Members", JLabel.CENTER);
         memb.setBounds(375,455,150,60);
         memb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         memb.setOpaque(true);
         memb.setBackground(new Color(255, 255, 255));
         
+        //Notifier
         JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
         notifier.setBounds(375,530,500,50);
         notifier.setFont(new Font("Sans-serif", Font.PLAIN, 14));
         notifier.setOpaque(true);
         notifier.setBackground(new Color(255, 255, 255));
       
-        //Generate new party code
+        //Generate new party code and add it
         QueryDataEngine queryEngine = new QueryDataEngine();
         queryEngine.queryAll("HSall_parties");
         ResultSet rs = queryEngine.getResultSet();
@@ -171,6 +187,9 @@ public class AddNewParty extends JFrame {
         pCode.setBackground(new Color(255, 255, 255));
         pCode.setBorder(blackline);
 
+        
+        //Add input objects
+        //Party blank
         JTextField partyFill = new JTextField(20);
         partyFill.setBounds(550,275,290,50);
         partyFill.addActionListener(new ActionListener() {
@@ -180,6 +199,7 @@ public class AddNewParty extends JFrame {
         	}
         });
 
+        //Chamber dropdown
         String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
@@ -192,7 +212,7 @@ public class AddNewParty extends JFrame {
         	}
         });
 
-       
+        //Congress blank
         JTextField congressFill = new JTextField(20);
         congressFill.setBounds(550,405,290,50);
         congressFill.addActionListener(new ActionListener() {
@@ -201,6 +221,7 @@ public class AddNewParty extends JFrame {
         	}
         });
         
+        //Members blank
         JTextField membersFill = new JTextField(20);
         membersFill.setBounds(550,465,290,50);
         membersFill.addActionListener(new ActionListener() {
@@ -209,7 +230,7 @@ public class AddNewParty extends JFrame {
         	}
         });
 
-
+        //Add button that allows for data to be added to database
         JButton enterDataOne=new JButton("Enter Data");//creating instance of JButton  
         enterDataOne.setBounds(650,595,215,50);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
@@ -246,6 +267,7 @@ public class AddNewParty extends JFrame {
         	            }
         	        }
         	        
+        	        //Update fields
         			notifier.setText("Entered data.");
         	        String codeLabel = "Party Code: " + outCode;
         	        pCode.setText(codeLabel);
@@ -256,6 +278,7 @@ public class AddNewParty extends JFrame {
         	}
         });
 
+        //Add objects to GUI panel
         contentPane.add(pName);
         contentPane.add(chamb);
         contentPane.add(cong);

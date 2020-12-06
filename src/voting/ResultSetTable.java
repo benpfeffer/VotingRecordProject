@@ -1,3 +1,8 @@
+/*
+ * This class converts a result set into a JTable to be displayed in the GUI.
+ * 
+ */
+
 package voting;
 import java.sql.*;
  

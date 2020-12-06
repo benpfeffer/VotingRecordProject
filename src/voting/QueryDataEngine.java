@@ -1,15 +1,21 @@
+/*
+ * This class queries the database based on any valid input.
+ * 
+ */
+
 package voting;
 
 import java.sql.*;
 
 public class QueryDataEngine {
+	//Initialize variables
 	private Connection connection;
 	private PreparedStatement stmt;
 	private ResultSet rs;
+	//Create connection to database
 	public QueryDataEngine() {
 		try
         {
-			// create a database connection
 			String partialPath = System.getProperty("user.dir");
 			String connPath = "jdbc:sqlite:" + partialPath + "/voting.db";
 			connection = DriverManager.getConnection(connPath);
@@ -21,6 +27,7 @@ public class QueryDataEngine {
         }
 	}
 	
+	//Query a table in the database
 	public void queryTable(FieldList fieldList, String table, String join) {	
 		try {
 			String queryText = "select * from " + table + " ";
@@ -91,6 +98,7 @@ public class QueryDataEngine {
 			queryText += "where ";
 			String op = "=";
 
+			//Include date range in query
 			for(int i = 0; i < fieldList.size(); i++) {
 				if(i > 0) queryText = queryText + " and ";
 				if(fieldList.fields.get(i).equals("startDate"))
@@ -100,7 +108,11 @@ public class QueryDataEngine {
 				else
 					queryText = queryText + fieldList.fields.get(i) + op + "?";
 			}
+			
+			//Prepare statement to send
 			stmt = connection.prepareStatement(queryText);
+			
+			//Add input to query (while preventing SQL injections)
 			int c = 1;
 			for(int i = 0; i < fieldList.size(); i++) {
 				if(fieldList.fields.get(i).equals("startDate") || fieldList.fields.get(i).equals("endDate")) continue;
@@ -108,6 +120,8 @@ public class QueryDataEngine {
 				stmt.setString(c, criterion);
 				c++;
 			}
+			
+			//Execute query
 			rs = stmt.executeQuery();
 						
 		}
@@ -116,6 +130,7 @@ public class QueryDataEngine {
 		}
 	}
 	
+	//Query all columns in a table
 	public void queryAll(String tbl) {
 		try {
 			String queryText = "select * from " + tbl;
@@ -126,6 +141,7 @@ public class QueryDataEngine {
 		}
 	}
 	
+	//Get the number of rows in a query
 	public int queryCount(String congress, String chamber) {
 		try {
 			String queryText = "SELECT COUNT(*) AS rowcount FROM HSall_rollcalls where congress = "
@@ -142,10 +158,12 @@ public class QueryDataEngine {
 		}
 	}
 	
+	//Get the result set
 	public ResultSet getResultSet() {
 		return rs;
 	}
 	
+	//Close query connection
 	public void finishQuerying() {
 		try {
 		connection.close();

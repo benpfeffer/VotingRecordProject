@@ -1,3 +1,8 @@
+/*
+ * This class displays the Add New Vote section and allows for user input in the GUI.
+ * 
+ */
+
 package voting;
 
 import javax.swing.*;  
@@ -9,7 +14,6 @@ import javax.swing.border.EmptyBorder;
 
 public class AddNewVote extends JFrame {
 	private JPanel contentPane;
-    //private final Action action = new SwingAction();
     public static String outCong = "None";
     public static String outChamb = "None";
     public static String outRollNum = "None";
@@ -17,6 +21,7 @@ public class AddNewVote extends JFrame {
     public static String outCast = "None";
     
     public AddNewVote() {
+    	//Set up the outline of the GUI
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
         contentPane = new JPanel();
@@ -33,8 +38,7 @@ public class AddNewVote extends JFrame {
         public void actionPerformed(ActionEvent e) {
         	JFrame f1 = (JFrame) SwingUtilities.windowForComponent(contentPane);
               MainMenu start = new MainMenu();
-              f1.dispose();        
-
+              f1.dispose();      
         }
           });
 
@@ -48,6 +52,7 @@ public class AddNewVote extends JFrame {
         contentPane.add(title);
 
 
+        //Add default pane
         JLabel t = new JLabel("Select an option to begin entering data", JLabel.CENTER);
         t.setBounds(350,220,570,460);
   		t.setFont(new Font("Sans-serif", Font.PLAIN, 24));
@@ -55,6 +60,7 @@ public class AddNewVote extends JFrame {
         t.setBackground(new Color(255, 255, 255));
         contentPane.add(t);
 
+        //Add Add New Vote Button for looks only
         JButton addVote=new JButton("Add New Vote");//creating instance of JButton  
 	      addVote.setBounds(40,220,290,100);//x axis, y axis, width, height 
         addVote.setFont(new Font("Sans-serif", Font.PLAIN, 28));
@@ -63,7 +69,7 @@ public class AddNewVote extends JFrame {
         addVote.setBorderPainted(false);
         contentPane.add(addVote);
         
-        
+        //Add Add New Rollcall button to switch to the Add New Rollcall pane
         JButton addRollcall=new JButton("Add New Rollcall");//creating instance of JButton  
 	       addRollcall.setBounds(40,340,290,100);//x axis, y axis, width, height 
         addRollcall.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -76,6 +82,7 @@ public class AddNewVote extends JFrame {
               f1.dispose();        }
           });
           
+        //Add Add New Member button to switch to the Add New Member pane
         JButton addMember=new JButton("Add New Member");//creating instance of JButton  
 	       addMember.setBounds(40,460,290,100);//x axis, y axis, width, height 
         addMember.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -88,6 +95,7 @@ public class AddNewVote extends JFrame {
               f1.dispose();           }
           });
           
+        //Add Add New Party button to switch to the Add New Party pane
         JButton addParty=new JButton("Add New Party");//creating instance of JButton  
 	       addParty.setBounds(40,580,290,100);//x axis, y axis, width, height 
         addParty.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -102,44 +110,52 @@ public class AddNewVote extends JFrame {
 		
         
 
-        
-        
+        //Add input labels
+        //Congress
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
         cong.setBounds(400,275,100,50);
         cong.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cong.setOpaque(true);
         cong.setBackground(new Color(255, 255, 255));
 
+        //Chamber
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
         chamb.setBounds(400,335,100,50);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
         chamb.setBackground(new Color(255, 255, 255));
 
+        //Roll number
         JLabel rNum = new JLabel("Roll Number", JLabel.CENTER);
         rNum.setBounds(375,395,150,50);
         rNum.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         rNum.setOpaque(true);
         rNum.setBackground(new Color(255, 255, 255));
 
+        //ICPSR
         JLabel icp = new JLabel("ICPSR", JLabel.CENTER);
         icp.setBounds(400,455,100,50);
         icp.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         icp.setOpaque(true);
         icp.setBackground(new Color(255, 255, 255));
 
+        //Cast Code
         JLabel cast = new JLabel("Cast Code", JLabel.CENTER);
         cast.setBounds(400,515,100,50);
         cast.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cast.setOpaque(true);
         cast.setBackground(new Color(255, 255, 255));
 
+        //Notifier
         JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
         notifier.setBounds(410,595,230,70);
         notifier.setFont(new Font("Sans-serif", Font.PLAIN, 12));
         notifier.setOpaque(true);
         notifier.setBackground(new Color(255, 255, 255));
 
+        
+        //Add input objects
+        //Congress blank
         JTextField congressFill = new JTextField(20);
         congressFill.setBounds(550,275,290,50);
         congressFill.addActionListener(new ActionListener() {
@@ -148,7 +164,7 @@ public class AddNewVote extends JFrame {
         	}
         });
 
-
+        //Chamber dropdown
         String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
@@ -161,7 +177,7 @@ public class AddNewVote extends JFrame {
         	}
         });
 
-        
+        //Roll Number dropdown
         JTextField rollNumDropdown = new JTextField(20);
         rollNumDropdown.setBounds(550,395,290,50);
         String selectedRollNum = (String)rollNumDropdown.getText();
@@ -172,6 +188,7 @@ public class AddNewVote extends JFrame {
         	}
         });
 
+        //ICPSR dropdown
         JTextField icpDropdown = new JTextField(20);
         icpDropdown.setBounds(550,455,290,50);
         String selectedIcp = (String)icpDropdown.getText();
@@ -182,6 +199,7 @@ public class AddNewVote extends JFrame {
         	}
         });
 
+        //Cast Code dropdown
         String[] castCodes = { "None", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
         JComboBox castCodeDropdown = new JComboBox(castCodes);
         castCodeDropdown.setSelectedIndex(0);
@@ -194,6 +212,8 @@ public class AddNewVote extends JFrame {
         	}
         });
 
+        
+        //Add button that allows for data to be added to database
         JButton enterDataOne=new JButton("Enter Data");//creating instance of JButton  
         enterDataOne.setBounds(650,595,215,50);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
@@ -212,6 +232,7 @@ public class AddNewVote extends JFrame {
         });
 
 
+        //Add objects to GUI panel
         JLabel t1 = new JLabel();
         t1.setBounds(350,220,570,460);
         t1.setFont(new Font("Sans-serif", Font.PLAIN, 24));

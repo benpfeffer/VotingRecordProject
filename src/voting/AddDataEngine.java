@@ -1,16 +1,20 @@
+/*
+ * This class updates the database based on any valid input.
+ * 
+ */
+
 package voting;
 
 import java.sql.*;
 
 
 public class AddDataEngine {
-	
 	private Connection connection;
 	private PreparedStatement stmt;
+	//Create connection to database
 	public AddDataEngine() {
 		try
         {
-          // create a database connection
 		  String partialPath = System.getProperty("user.dir");
 		  String connPath = "jdbc:sqlite:" + partialPath + "/voting.db";
           connection = DriverManager.getConnection(connPath);
@@ -22,6 +26,7 @@ public class AddDataEngine {
         }
 	}
 	
+	//Add vote to votes table in database
 	public void addVote(String congress, String chamber, String rollnumber, String icpsr, String cast_code) {
 		try {
 			String queryString = "insert into HSall_votes values(?, ?, ?, ?, ?)";
@@ -37,6 +42,7 @@ public class AddDataEngine {
 		}
 	}
 	
+	//Add rollcall to rollcall table in database
 	public void addRollcall(String congress, String chamber, String rollnumber, String date, String session, String clerk_rollnumber, String bill_number, String vote_result, String vote_desc, String vote_question, String dtl_desc) {
 		try {
 			String queryString = "insert into HSall_rollcalls(congress, chamber, rollnumber, date, session, clerk_rollnumber, bill_number, vote_result, vote_desc, vote_question, dtl_desc) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -58,6 +64,7 @@ public class AddDataEngine {
 			}
 	}
 	
+	//Add member to member table in database
 	public void addMember(String congress, String chamber, String icpsr, String state_icpsr, String district_code, String state_abbrev, String party_code, String bioname, String bioguide_id, String born) {
 		try {
 			String queryString = "insert into HSall_members(congress, chamber, icpsr, state_icpsr, district_code, state_abbrev, party_code, bioname, bioguide_id, born) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -78,6 +85,7 @@ public class AddDataEngine {
 			}
 	}
 	
+	//Add party to party table in database
 	public void addParty(String congress, String chamber, String party_code, String party_name, String n_members) {
 		try {
 			String queryString = "insert into HSall_parties(congress, chamber, party_code, party_name, n_members) values(?, ?, ?, ?, ?)";

@@ -1,3 +1,8 @@
+/*
+ * This class displays the Add New Rollcall section and allows for user input in the GUI.
+ * 
+ */
+
 package voting;
 
 import javax.swing.*;  
@@ -29,6 +34,7 @@ public class AddNewRollcall extends JFrame {
 
     
     public AddNewRollcall() {
+    	//Set up the outline of the GUI
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
         contentPane = new JPanel();
@@ -58,7 +64,7 @@ public class AddNewRollcall extends JFrame {
   	    title.setBackground(new Color(255, 255, 255));
         contentPane.add(title);
 
-
+        //Add default pane
         JLabel t = new JLabel("Select an option to begin entering data", JLabel.CENTER);
         t.setBounds(350,220,570,460);
   		t.setFont(new Font("Sans-serif", Font.PLAIN, 24));
@@ -66,6 +72,7 @@ public class AddNewRollcall extends JFrame {
         t.setBackground(new Color(255, 255, 255));
         contentPane.add(t);
 
+        //Add Add New Vote button to switch to the Add New Vote pane
         JButton addVote=new JButton("Add New Vote");//creating instance of JButton  
 	       addVote.setBounds(40,220,290,100);//x axis, y axis, width, height 
         addVote.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -79,6 +86,7 @@ public class AddNewRollcall extends JFrame {
         }
           });
         
+        //Add Add New Rollcall button for looks only
         JButton addRollcall=new JButton("Add New Rollcall");//creating instance of JButton  
 	    addRollcall.setBounds(40,340,290,100);//x axis, y axis, width, height 
         addRollcall.setFont(new Font("Sans-serif", Font.PLAIN, 28));
@@ -87,6 +95,7 @@ public class AddNewRollcall extends JFrame {
         addRollcall.setBorderPainted(false);
         contentPane.add(addRollcall);
         
+        //Add Add New Member button to switch to the Add New Member pane
         JButton addMember=new JButton("Add New Member");//creating instance of JButton  
 	       addMember.setBounds(40,460,290,100);//x axis, y axis, width, height 
         addMember.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -100,6 +109,7 @@ public class AddNewRollcall extends JFrame {
            }
           });
           
+        //Add Add New Party button to switch to the Add New Party pane
         JButton addParty=new JButton("Add New Party");//creating instance of JButton  
 	       addParty.setBounds(40,580,290,100);//x axis, y axis, width, height 
         addParty.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -113,73 +123,87 @@ public class AddNewRollcall extends JFrame {
            }
           });
 
+        //Add input labels
+        //Bill number
         JLabel billN = new JLabel("Bill No.", JLabel.CENTER);
         billN.setBounds(400,240,100,30);
         billN.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         billN.setOpaque(true);
         billN.setBackground(new Color(255, 255, 255));
 
+        //Vote result
         JLabel voteR = new JLabel("Vote Result", JLabel.CENTER);
         voteR.setBounds(655,240,100,30);
         voteR.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         voteR.setOpaque(true);
         voteR.setBackground(new Color(255, 255, 255));
 
+        //Congress
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
         cong.setBounds(400,275,100,50);
         cong.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cong.setOpaque(true);
         cong.setBackground(new Color(255, 255, 255));
 
+        //Chamber
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
         chamb.setBounds(400,320,100,50);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
         chamb.setBackground(new Color(255, 255, 255));
 
+        //Date
         JLabel date = new JLabel("Date", JLabel.CENTER);
         date.setBounds(375,365,150,50);
         date.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         date.setOpaque(true);
         date.setBackground(new Color(255, 255, 255));
 
+        //Session
         JLabel sess = new JLabel("Session", JLabel.CENTER);
         sess.setBounds(400,410,100,50);
         sess.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         sess.setOpaque(true);
         sess.setBackground(new Color(255, 255, 255));
 
+        //Clerk Number
         JLabel clerkNo = new JLabel("Clerk No.", JLabel.CENTER);
         clerkNo.setBounds(655,410,100,40);
         clerkNo.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         clerkNo.setOpaque(true);
         clerkNo.setBackground(new Color(255, 255, 255));
 
+        //Vote Description
         JLabel vDesc = new JLabel("Vote Desc", JLabel.CENTER);
         vDesc.setBounds(400,450,100,40);
         vDesc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         vDesc.setOpaque(true);
         vDesc.setBackground(new Color(255, 255, 255));
         
+        //Vote Question
         JLabel vQuestion = new JLabel("Vote Question", JLabel.CENTER);
         vQuestion.setBounds(380,485,150,40);
         vQuestion.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         vQuestion.setOpaque(true);
         vQuestion.setBackground(new Color(255, 255, 255));
 
+        //Detailed Description
         JLabel dDesc = new JLabel("Detailed Desc", JLabel.CENTER);
         dDesc.setBounds(390,530,120,40);
         dDesc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         dDesc.setOpaque(true);
         dDesc.setBackground(new Color(255, 255, 255));
 
+        //Notifier
         JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
         notifier.setBounds(410,595,230,70);
         notifier.setFont(new Font("Sans-serif", Font.PLAIN, 12));
         notifier.setOpaque(true);
         notifier.setBackground(new Color(255, 255, 255));
 
-
+        
+        //Add input objects
+        //Bill number blank
         JTextField billNo = new JTextField(20);
         billNo.setBounds(550,240,75,30);
         billNo.addActionListener(new ActionListener() {
@@ -189,6 +213,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
+        //Vote result blank
         JTextField voteRes = new JTextField(20);
         voteRes.setBounds(765,240,75,30);
         voteRes.addActionListener(new ActionListener() {
@@ -197,6 +222,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
+        //Congress blank
         JTextField congressFill = new JTextField(20);
         congressFill.setBounds(550,280,290,30);
         congressFill.addActionListener(new ActionListener() {
@@ -205,7 +231,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
-
+        //Chamber dropdown
         String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
@@ -218,7 +244,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
-      //Start Date Selector
+        //Start Date Selector
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd"); 
 
         Date earliestDate = null, latestDate = null, targetDate = null;
@@ -242,6 +268,7 @@ public class AddNewRollcall extends JFrame {
             }
         });
 
+        //Session blank
         JTextField sessBlank = new JTextField(20);
         sessBlank.setBounds(550,420,75,30);
         sessBlank.addActionListener(new ActionListener() {
@@ -250,6 +277,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
+        //Clerk number blank
         JTextField clerkBlank = new JTextField(20);
         clerkBlank.setBounds(765,420,75,30);
         clerkBlank.addActionListener(new ActionListener() {
@@ -258,6 +286,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
+        //Vote description blank
         JTextField vDescBlank = new JTextField(100);
         vDescBlank.setBounds(550,455,290,30);
         vDescBlank.addActionListener(new ActionListener() {
@@ -266,6 +295,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
         
+        //Vote question blank
         JTextField vQuestionBlank = new JTextField(100);
         vQuestionBlank.setBounds(550,490,290,30);
         vQuestionBlank.addActionListener(new ActionListener() {
@@ -274,6 +304,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
+        //Detailed description blank
         JTextField dDescBlank = new JTextField(250);
         dDescBlank.setBounds(550,530,290,50);
         dDescBlank.addActionListener(new ActionListener() {
@@ -282,7 +313,8 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
-
+        
+        //Add button that allows for data to be added to database
         JButton enterDataOne=new JButton("Enter Data");//creating instance of JButton  
         enterDataOne.setBounds(650,595,215,50);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
@@ -308,6 +340,7 @@ public class AddNewRollcall extends JFrame {
         	}
         });
 
+        //Add objects to GUI panel
         JLabel t1 = new JLabel();
         t1.setBounds(350,220,570,460);
         t1.setFont(new Font("Sans-serif", Font.PLAIN, 24));

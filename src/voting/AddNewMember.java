@@ -1,3 +1,8 @@
+/*
+ * This class displays the Add New Member section and allows for user input in the GUI.
+ * 
+ */
+
 package voting;
 
 import javax.swing.*;  
@@ -23,6 +28,7 @@ public class AddNewMember extends JFrame {
 
     
     public AddNewMember() {
+    	//Set up the outline of the GUI
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,0, 960, 720);
         contentPane = new JPanel();
@@ -52,6 +58,7 @@ public class AddNewMember extends JFrame {
   	    title.setBackground(new Color(255, 255, 255));
         contentPane.add(title);
 
+        //Add default pane
         JLabel t = new JLabel("Select an option to begin entering data", JLabel.CENTER);
         t.setBounds(350,220,570,460);
   		t.setFont(new Font("Sans-serif", Font.PLAIN, 24));
@@ -59,6 +66,7 @@ public class AddNewMember extends JFrame {
         t.setBackground(new Color(255, 255, 255));
         contentPane.add(t);       
         
+        //Add Add New Vote button to switch to the Add New Vote pane
         JButton addVote=new JButton("Add New Vote");//creating instance of JButton  
         addVote.setBounds(40,220,290,100);//x axis, y axis, width, height 
         addVote.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -71,7 +79,7 @@ public class AddNewMember extends JFrame {
                 f1.dispose();        	}
         });
 
-
+        //Add Add New Rollcall button to switch to the Add New Rollcall pane
         JButton addRollcall=new JButton("Add New Rollcall");//creating instance of JButton  
         addRollcall.setBounds(40,340,290,100);//x axis, y axis, width, height 
         addRollcall.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -84,6 +92,7 @@ public class AddNewMember extends JFrame {
                 f1.dispose();        	}
         });
 
+        //Add Add New Member button for looks only
         JButton addMember=new JButton("Add New Member");//creating instance of JButton  
         addMember.setBounds(40,460,290,100);//x axis, y axis, width, height 
         addMember.setFont(new Font("Sans-serif", Font.PLAIN, 28));
@@ -92,6 +101,7 @@ public class AddNewMember extends JFrame {
         addMember.setBorderPainted(false);
         contentPane.add(addMember);
 
+        //Add Add New Party button to switch to the Add New Party pane
         JButton addParty=new JButton("Add New Party");//creating instance of JButton  
         addParty.setBounds(40,580,290,100);//x axis, y axis, width, height 
         addParty.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -104,67 +114,80 @@ public class AddNewMember extends JFrame {
                 f1.dispose();        	}
         });
      
+        //Add input labels
+        //Name
         JLabel name = new JLabel("Name", JLabel.CENTER);
         name.setBounds(400,255,100,30);
         name.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         name.setOpaque(true);
         name.setBackground(new Color(255, 255, 255));
 
+        //Birth year
         JLabel bd = new JLabel("Birth Year", JLabel.CENTER);
         bd.setBounds(400,295,100,30);
         bd.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         bd.setOpaque(true);
         bd.setBackground(new Color(255, 255, 255));
 
+        //Chamber
         JLabel chamb = new JLabel("Chamber", JLabel.CENTER);
         chamb.setBounds(400,335,100,30);
         chamb.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         chamb.setOpaque(true);
         chamb.setBackground(new Color(255, 255, 255));
 
+        //State
         JLabel state = new JLabel("State", JLabel.CENTER);
         state.setBounds(375,375,150,30);
         state.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         state.setOpaque(true);
         state.setBackground(new Color(255, 255, 255));
 
+        //District
         JLabel district = new JLabel("District", JLabel.CENTER);
         district.setBounds(665,375,75,30);
         district.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         district.setOpaque(true);
         district.setBackground(new Color(255, 255, 255));
 
+        //Congress
         JLabel cong = new JLabel("Congress", JLabel.CENTER);
         cong.setBounds(400,415,100,30);
         cong.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         cong.setOpaque(true);
         cong.setBackground(new Color(255, 255, 255));
 
+        //Party ID
         JLabel party = new JLabel("Party ID", JLabel.CENTER);
         party.setBounds(400,455,100,30);
         party.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         party.setOpaque(true);
         party.setBackground(new Color(255, 255, 255));
 
+        //Bio Guide ID
         JLabel bioGuide = new JLabel("Bio Guide ID", JLabel.CENTER);
         bioGuide.setBounds(400,495,120,30);
         bioGuide.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         bioGuide.setOpaque(true);
         bioGuide.setBackground(new Color(255, 255, 255));
 
+        //ICPSR
         JLabel icp = new JLabel("ICPSR", JLabel.CENTER);
         icp.setBounds(400,535,100,30);
         icp.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         icp.setOpaque(true);
         icp.setBackground(new Color(255, 255, 255));
         
+        //Notifier
         JLabel notifier = new JLabel("<html><center>To create new database entry, please fill in all fields and press the \"Enter Date\" button. Be sure to press the ENTER key after typing in a text box. </center></html>", JLabel.CENTER);
         notifier.setBounds(410,595,230,70);
         notifier.setFont(new Font("Sans-serif", Font.PLAIN, 12));
         notifier.setOpaque(true);
         notifier.setBackground(new Color(255, 255, 255));
 
-
+        
+        //Add input objects
+        //Name blank
         JTextField nameBlank = new JTextField(20);
         nameBlank.setBounds(550,255,290,30);
         nameBlank.addActionListener(new ActionListener() {
@@ -174,6 +197,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //Birth year blank
         JTextField bdBlank = new JTextField(20);
         bdBlank.setBounds(550,295,290,30);
         bdBlank.addActionListener(new ActionListener() {
@@ -183,6 +207,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //Chamber dropdown
         String[] chambers = { "None", "Senate", "House", "President" };
         JComboBox chamberDropdown = new JComboBox(chambers);
         chamberDropdown.setSelectedIndex(0);
@@ -195,9 +220,9 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //State dropdown
         String[] states = { "None", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI","SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
         String[] state_icpsr = { "None", "41", "81", "61", "42", "71", "62", "1", "11", "43", "44", "82", "63", "21", "22", "31", "32", "51", "45", "2", "52", "3", "23", "33", "46", "34", "64", "35", "65", "4", "12", "66", "13", "47", "36", "24", "53", "72", "14", "5","48", "37", "54", "49", "67", "6", "40", "73", "56", "25", "68"};
-
         JComboBox stateDropdown = new JComboBox(states);
         stateDropdown.setSelectedIndex(0);
         stateDropdown.setBounds(550,375,90,30);
@@ -214,6 +239,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //District dropdown
         String[] districts = new String[56];
         for(int i = 0; i < 56; i++) {
         	districts[i] = Integer.toString(i);
@@ -228,7 +254,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
-        //Congress Selector
+        //Congress blank
         JTextField congressFill = new JTextField(20);
         congressFill.setBounds(550,415,290,30);
         congressFill.addActionListener(new ActionListener() {
@@ -237,6 +263,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //Party blank
         JTextField partyFill = new JTextField(20);
         partyFill.setBounds(550,455,290,30);
         partyFill.addActionListener(new ActionListener() {
@@ -245,6 +272,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //Bio Guide blank
         JTextField bioGuideBlank = new JTextField(20);
         bioGuideBlank.setBounds(550,495,290,30);
         bioGuideBlank.addActionListener(new ActionListener() {
@@ -253,6 +281,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //ICPSR blank
         JTextField icpBlank = new JTextField(20);
         icpBlank.setBounds(550,535,290,30);
         icpBlank.addActionListener(new ActionListener() {
@@ -261,6 +290,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
+        //Add button that allows for data to be added to database
         JButton enterDataOne=new JButton("Enter Data");//creating instance of JButton  
         enterDataOne.setBounds(650,595,215,30);//x axis, y axis, width, height 
         enterDataOne.setFont(new Font("Sans-serif", Font.PLAIN, 18));
@@ -278,7 +308,7 @@ public class AddNewMember extends JFrame {
         	}
         });
 
-
+        //Add objects to GUI panel
         JLabel t1 = new JLabel();
         t1.setBounds(350,220,570,460);
         t1.setFont(new Font("Sans-serif", Font.PLAIN, 24));

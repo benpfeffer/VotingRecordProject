@@ -1,3 +1,8 @@
+/*
+ * This class displays the Basic Search section and allows for user input in the GUI.
+ * 
+ */
+
 package voting;
 
 import javax.swing.*;  
@@ -82,7 +87,6 @@ public class BasicSearch extends JFrame {
         		AdvancedSearch advancedSearch = new AdvancedSearch();
         		advancedSearch.setVisible(true);
         		f1.dispose();
-        		System.out.println("Advanced search");
         	}
         });
 		
