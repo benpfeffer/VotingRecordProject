@@ -38,7 +38,7 @@ public class BasicSearch extends JFrame {
         
         //Back Button
         JButton menu = new JButton("Menu");//creating instance of JButton  
-        menu.setBounds(40,40,150,50);//x axis, y axis, width, height 
+        menu.setBounds(40,40,120,30);//x axis, y axis, width, height 
         menu.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(menu);
         menu.addActionListener(new ActionListener() {
@@ -133,9 +133,6 @@ public class BasicSearch extends JFrame {
         epmvrBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		epmvrInput = epmvrBlank.getText();
-        		//Protect against SQL injection attacks!
-        		String[] tokens = epmvrInput.split(" ", 2);
-        		epmvrInput = tokens[0];
         	}
         });
         
@@ -157,12 +154,7 @@ public class BasicSearch extends JFrame {
         			System.out.println(tokens[2]);//gives field
         			String field = tokens[2].substring(0);
         			epmvrInput = epmvrInput.replace("\"", "");
-        			if(field.equalsIgnoreCase("chamber") || field.equalsIgnoreCase("state_abbrev") || field.equalsIgnoreCase("bioname") || 
-        					field.equalsIgnoreCase("bioguide_id") || field.equalsIgnoreCase("party_name") || field.equalsIgnoreCase("date") ||
-        					field.equalsIgnoreCase("bill_number") || field.equalsIgnoreCase("vote_result") || field.equalsIgnoreCase("vote_desc") ||
-        					field.equalsIgnoreCase("vote_question") || field.equalsIgnoreCase("dtl_desc")) {//if the field is a string field (any table)
-        				epmvrInput = "\"" + epmvrInput + "\"";
-        			}
+        			
         			//Initialize the fields being searched
         			FieldList fieldList = new FieldList();
         			fieldList.addField(field, epmvrInput);
@@ -197,10 +189,13 @@ public class BasicSearch extends JFrame {
     				} catch(Exception ex) {
     					//handle the error that occurs if users do not enter a valid value for the variable they are searching
     					endList.setText("<html>Invalid search value for the selected variable. Please try again.</html>");
-    				}
-        		}
+    					} 
+    				} 
+        		else {
+    				endList.setText("<html>Please fill in all necessary fields.</html>");
+    			}
         	}
-        });
+        	});
 
         //Display everything
         contentPane.add(ssc);

@@ -4,16 +4,15 @@ import java.sql.*;
 
 public class QueryDataEngine {
 	private Connection connection;
-	private Statement stmt;
+	private PreparedStatement stmt;
 	private ResultSet rs;
 	public QueryDataEngine() {
 		try
         {
 			// create a database connection
 			String partialPath = System.getProperty("user.dir");
-			String connPath = "jdbc:sqlite:" + partialPath + "/voting/voting.db";
+			String connPath = "jdbc:sqlite:" + partialPath + "/voting.db";
 			connection = DriverManager.getConnection(connPath);
-			stmt = connection.createStatement();
 			System.out.println("Connection successful");
         }
         catch(SQLException e)
@@ -99,12 +98,18 @@ public class QueryDataEngine {
 				else if(fieldList.fields.get(i).equals("endDate"))
 					queryText = queryText + "date" + "<=" + "\"" + fieldList.values.get(i) + "\"";
 				else
-					queryText = queryText + fieldList.fields.get(i) + op + fieldList.values.get(i);
-				System.out.println(queryText);
+					queryText = queryText + fieldList.fields.get(i) + op + "?";
 			}
-			rs = stmt.executeQuery(queryText);
-			//rs.close();
-			
+			stmt = connection.prepareStatement(queryText);
+			int c = 1;
+			for(int i = 0; i < fieldList.size(); i++) {
+				if(fieldList.fields.get(i).equals("startDate") || fieldList.fields.get(i).equals("endDate")) continue;
+				String criterion = fieldList.values.get(i);
+				stmt.setString(c, criterion);
+				c++;
+			}
+			rs = stmt.executeQuery();
+						
 		}
 		catch(SQLException e) {
 			System.err.println(e.getMessage());
@@ -114,7 +119,8 @@ public class QueryDataEngine {
 	public void queryAll(String tbl) {
 		try {
 			String queryText = "select * from " + tbl;
-			rs = stmt.executeQuery(queryText);
+			stmt = connection.prepareStatement(queryText);
+			rs = stmt.executeQuery();
 		} catch(SQLException e) {
 			System.err.println(e.getMessage());
 		}
@@ -124,7 +130,8 @@ public class QueryDataEngine {
 		try {
 			String queryText = "SELECT COUNT(*) AS rowcount FROM HSall_rollcalls where congress = "
       	          + congress + " and chamber = " + "\"" + chamber + "\"";
-			rs = stmt.executeQuery(queryText);
+			stmt = connection.prepareStatement(queryText);
+			rs = stmt.executeQuery();
 			rs.next();
     		int count = rs.getInt("rowcount");
     	    rs.close();

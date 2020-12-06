@@ -26,14 +26,15 @@ public class AddNewVote extends JFrame {
         
         //back button
         JButton menu = new JButton("Menu");//creating instance of JButton  
-	      menu.setBounds(40,40,75,50);//x axis, y axis, width, height 
+	      menu.setBounds(40,40,120,30);//x axis, y axis, width, height 
         menu.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(menu);
         menu.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+        	JFrame f1 = (JFrame) SwingUtilities.windowForComponent(contentPane);
               MainMenu start = new MainMenu();
-              start.setVisible(true);
-              contentPane.setVisible(false);
+              f1.dispose();        
+
         }
           });
 

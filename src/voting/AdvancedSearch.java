@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class AdvancedSearch extends JFrame {
 	private JPanel contentPane;
@@ -45,7 +46,7 @@ public class AdvancedSearch extends JFrame {
         
         //back button
         JButton menu = new JButton("Menu");//creating instance of JButton  
-        menu.setBounds(40,40,150,50);//x axis, y axis, width, height 
+        menu.setBounds(40,40,120,30);//x axis, y axis, width, height 
         menu.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         contentPane.add(menu);
         menu.addActionListener(new ActionListener() {
@@ -77,7 +78,6 @@ public class AdvancedSearch extends JFrame {
         	BasicSearch basicSearch = new BasicSearch();
         	basicSearch.setVisible(true);
         	f1.dispose();
-        	System.out.println("Basic search");
         }
           });
         
@@ -148,7 +148,6 @@ public class AdvancedSearch extends JFrame {
         sscDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		selectedSsc = (String)sscDropdown.getSelectedItem();
-        		System.out.println(selectedSsc);
         	}
         });
         
@@ -169,7 +168,9 @@ public class AdvancedSearch extends JFrame {
         fillInBlank.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		fillInInput = fillInBlank.getText();
-        		System.out.println(fillInInput);
+        		//Protect against SQL injection attacks!
+        		String[] tokens = fillInInput.split(" ", 2);
+        		fillInInput = tokens[0];
         	}
         });
         
@@ -220,42 +221,38 @@ public class AdvancedSearch extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		String selectedChamber = (String)chamberDropdown.getSelectedItem();
         		outChamb = selectedChamber;
-        		System.out.println(selectedChamber);
         	}
         });
 
         //Congress Selector
         FieldList congsFieldList = new FieldList();
-        congsFieldList.addField("chamber",  "\"Senate\"");
+        congsFieldList.addField("chamber",  "Senate");
         dataEngine.queryTable(congsFieldList, "HSall_parties", null);
         ResultSet rs = dataEngine.getResultSet();
-        int count = 0;
-        String[] congList = new String[118];//length should be number of congresses +1 (for "None")
-        congList[0]="None";
+        ArrayList<String> congList = new ArrayList<String>();
+        congList.add("None");
         try {
-	        while (rs.next ())
+	        while (rs.next())
 	        {
-	            String congVal = rs.getString ("congress");
-	            boolean contains = Arrays.stream(congList).anyMatch(congVal::equals);
-	            if(!contains) {
-	            	++count;
-	            	congList[count] = congVal;
+	            String congVal = rs.getString("congress");
+	            if(!congList.contains(congVal)) {
+	            	congList.add(congVal);
 	            }
-	            
 	        }
-        rs.close ();
+        rs.close();
         } catch(Exception exc) {
         	exc.printStackTrace();
         }
-        
-        String[] congs = congList;
+        String[] congs = new String[congList.size()];
+        for(int i = 0; i < congs.length; i++) {
+        	congs[i] = congList.get(i);
+        }
         JComboBox congDropdown = new JComboBox(congs);
         congDropdown.setSelectedIndex(0);
         congDropdown.setBounds(400,375,165,50);
         congDropdown.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		outCong = (String)congDropdown.getSelectedItem();
-        		System.out.println(outCong);
         	}
         });
 
@@ -267,23 +264,14 @@ public class AdvancedSearch extends JFrame {
         //Create query from currently selected attributes
         enterDataOne.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if(selectedSsc != "None" && outChamb!="None" && outCong!="None"){
-        			System.out.println("Entered data.");
+        		if(selectedSsc != "None"){
         			String[] tokens = selectedSsc.split(" ", -1);
-        			System.out.println(tokens[0]);//gives method
         			String method = tokens[0];
-        			System.out.println(tokens[2]);//gives field
         			String field1 = tokens[2].substring(0);
         			fillInInput = fillInInput.replace("\"", "");
         			
         			//Create the list of fields that the query will use
         			FieldList fieldList = new FieldList();
-        			if(field1.equalsIgnoreCase("chamber") || field1.equalsIgnoreCase("state_abbrev") || field1.equalsIgnoreCase("bioname") || 
-        					field1.equalsIgnoreCase("bioguide_id") || field1.equalsIgnoreCase("party_name") || field1.equalsIgnoreCase("date") ||
-        					field1.equalsIgnoreCase("bill_number") || field1.equalsIgnoreCase("vote_result") || field1.equalsIgnoreCase("vote_desc") ||
-        					field1.equalsIgnoreCase("vote_question") || field1.equalsIgnoreCase("dtl_desc")) {//if the field is a string field (any table)
-        				fillInInput = "\"" + fillInInput + "\"";
-        			}
         			if(field1 != "None")
         				fieldList.addField(field1, fillInInput);
         			if(outChamb != "None")
@@ -338,7 +326,7 @@ public class AdvancedSearch extends JFrame {
     					endList.setText("<html>Invalid search value for the selected variable. Please try again.</html>");
     				}
         		} else {
-        			endList.setText("<html>Please fill in all necessary fields.</html>");
+        			endList.setText("<html>Please fill in the search field.</html>");
         		}
         	}
         });
