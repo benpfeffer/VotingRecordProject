@@ -1,3 +1,8 @@
+/*
+ * This class displays the Advanced Search section and allows for user input in the GUI.
+ * 
+ */
+
 package voting;
 
 import java.awt.BorderLayout;
@@ -13,7 +18,6 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;

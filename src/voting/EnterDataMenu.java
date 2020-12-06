@@ -1,3 +1,8 @@
+/*
+ * This class displays the Enter Data starting page.
+ * 
+ */
+
 package voting;
 
 import javax.swing.*;  
@@ -16,6 +21,7 @@ public class EnterDataMenu extends JFrame {
     public static String outCast = "None";
     
     public EnterDataMenu() {
+    	//Set up the basics of the GUI
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, 960, 720);
         contentPane = new JPanel();
@@ -23,7 +29,7 @@ public class EnterDataMenu extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        //back button
+        //Back Button
         JButton menu = new JButton("Menu");//creating instance of JButton  
 	      menu.setBounds(40,40,120,30);//x axis, y axis, width, height 
         menu.setFont(new Font("Sans-serif", Font.PLAIN, 18));
@@ -37,7 +43,7 @@ public class EnterDataMenu extends JFrame {
           });
 
         
-        //add title
+        //Title
   		JLabel title = new JLabel("Congressional Voting Database", JLabel.CENTER);
   		title.setBounds(40,40,880,160);
   		title.setFont(new Font("Sans-serif", Font.PLAIN, 48));
@@ -45,7 +51,7 @@ public class EnterDataMenu extends JFrame {
   	    title.setBackground(new Color(255, 255, 255));
         contentPane.add(title);
 
-        
+        //Default Entry Pane
         JLabel t = new JLabel("Select an option to begin entering data", JLabel.CENTER);
         t.setBounds(350,220,570,460);
   		t.setFont(new Font("Sans-serif", Font.PLAIN, 24));
@@ -53,6 +59,7 @@ public class EnterDataMenu extends JFrame {
         t.setBackground(new Color(255, 255, 255));
         contentPane.add(t);
         
+        //Switch to Add New Vote
         JButton addVote=new JButton("Add New Vote");//creating instance of JButton  
         addVote.setBounds(40,220,290,100);//x axis, y axis, width, height 
         addVote.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -67,6 +74,7 @@ public class EnterDataMenu extends JFrame {
 
         	}});
         
+        //Switch to Add New Rollcall
         JButton addRollcall=new JButton("Add New Rollcall");//creating instance of JButton  
 	       addRollcall.setBounds(40,340,290,100);//x axis, y axis, width, height 
         addRollcall.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -80,6 +88,7 @@ public class EnterDataMenu extends JFrame {
            }
           });
         
+        //Switch to Add New Member
         JButton addMember=new JButton("Add New Member");//creating instance of JButton  
 	       addMember.setBounds(40,460,290,100);//x axis, y axis, width, height 
         addMember.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -90,10 +99,10 @@ public class EnterDataMenu extends JFrame {
               AddNewMember addNewMember = new AddNewMember();
               addNewMember.setVisible(true);
               f1.dispose();
-              
            }
           });
           
+        //Switch to Add New Party
         JButton addParty=new JButton("Add New Party");//creating instance of JButton  
 	       addParty.setBounds(40,580,290,100);//x axis, y axis, width, height 
         addParty.setFont(new Font("Sans-serif", Font.PLAIN, 32));
@@ -109,12 +118,5 @@ public class EnterDataMenu extends JFrame {
         
         
         
-        /*
-        JLabel t1 = new JLabel("Option entered", JLabel.CENTER);
-        t1.setBounds(350,220,570,460);
-  		t1.setFont(new Font("Sans-serif", Font.PLAIN, 24));
-  		t1.setOpaque(true);
-        t1.setBackground(new Color(255, 255, 255));
-        contentPane.add(t1);*/
     }
 }

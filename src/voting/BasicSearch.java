@@ -1,3 +1,8 @@
+/*
+ * This class displays the Basic Search section and allows for user input in the GUI.
+ * 
+ */
+
 package voting;
 
 import javax.swing.*;  
