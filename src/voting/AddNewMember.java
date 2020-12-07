@@ -240,8 +240,8 @@ public class AddNewMember extends JFrame {
         });
 
         //District dropdown
-        String[] districts = new String[56];
-        for(int i = 0; i < 56; i++) {
+        String[] districts = new String[100];
+        for(int i = 0; i < 100; i++) {
         	districts[i] = Integer.toString(i);
         }
         JComboBox districtDropdown = new JComboBox(districts);
