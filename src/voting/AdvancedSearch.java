@@ -305,7 +305,7 @@ public class AdvancedSearch extends JFrame {
 	        					tbl = "HSall_members";
 	        				if(selectedTbl == "Parties")
 	        					tbl = "HSall_parties";
-	        				if(selectedTbl == "Rollcall")
+	        				if(selectedTbl == "Rollcalls")
 	        					tbl = "HSall_rollcalls";
 	        				if(selectedTbl == "Votes")
 	        					tbl = "HSall_votes";
