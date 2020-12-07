@@ -63,7 +63,7 @@ public class QueryDataEngine {
 				case "HSall_rollcalls":
 					switch(join) {
 					case "HSall_members":
-						queryText += "inner join HSall_votes using(congress, chamber, icpsr) inner join HSall_rollcalls using(congress, chamber, rollnumber) ";
+						queryText += "inner join HSall_votes using(congress, chamber, rollnumber) inner join HSall_members using(congress, chamber, icpsr) ";
 						break;
 					case "HSall_parties":
 						queryText += "inner join HSall_rollcalls using(congress, chamber) ";

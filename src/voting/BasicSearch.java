@@ -91,7 +91,7 @@ public class BasicSearch extends JFrame {
         });
 		
         //Label for button to select query     
-        JLabel ssc = new JLabel("Select Search Criteria", JLabel.CENTER);
+        JLabel ssc = new JLabel("Select Filter Criteria", JLabel.CENTER);
         ssc.setBounds(150,280,290,50);
         ssc.setFont(new Font("Sans-serif", Font.PLAIN, 18));
         ssc.setOpaque(true);
@@ -153,9 +153,7 @@ public class BasicSearch extends JFrame {
         		if(epmvrInput != "None"){
         			//split selectedSsc up into left and right - field = right, method = left
         			String[] tokens = selectedSsc.split(" ", -1);
-        			System.out.println(tokens[0]);//gives method
         			String method = tokens[0];
-        			System.out.println(tokens[2]);//gives field
         			String field = tokens[2].substring(0);
         			epmvrInput = epmvrInput.replace("\"", "");
         			

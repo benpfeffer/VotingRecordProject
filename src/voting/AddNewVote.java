@@ -200,7 +200,7 @@ public class AddNewVote extends JFrame {
         });
 
         //Cast Code dropdown
-        String[] castCodes = { "None", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+        String[] castCodes = { "None", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
         JComboBox castCodeDropdown = new JComboBox(castCodes);
         castCodeDropdown.setSelectedIndex(0);
         castCodeDropdown.setBounds(550,515,290,50);
